@@ -10,6 +10,13 @@ public class User {
     public User() {
 	}
 
+	public User(String userId, String nickname, String email, String userImg) {
+		this.userId = userId;
+		this.nickname = nickname;
+		this.email = email;
+		this.userImg = userImg;
+	}
+
 	public User(String userId, String nickname, String password, String email, String userImg) {
 		this.userId = userId;
 		this.nickname = nickname;
