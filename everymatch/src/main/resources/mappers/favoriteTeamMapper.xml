@@ -17,18 +17,18 @@
 	</select>
 	
 	<delete id="deleteAllFavoriteTeamByUserId" parameterType="String">
-		DELETE FROM favorite-team
+		DELETE FROM favorite_team
 		WHERE user_id = #{userId};
 	</delete>
  
  	<delete id="deleteAllFavoriteTeamByTeamId" parameterType="int">
-		DELETE FROM favorite-team
+		DELETE FROM favorite_team
 		WHERE team_id = #{teamId};
 	</delete>
  
  	<insert id="insertFavoriteTeam" parameterType="FavoriteTeam">
- 		INSERT INTO favorite-team (user_id, team_id)
- 		VALUES (#{userId}, #{team_id})
+ 		INSERT INTO favorite_team (user_id, team_id)
+ 		VALUES (#{userId}, #{teamId})
  	</insert>
  
  </mapper>
