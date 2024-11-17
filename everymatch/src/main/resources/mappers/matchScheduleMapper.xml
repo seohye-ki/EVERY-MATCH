@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.everymatch.mvc.model.dao.MatchScheduleDao">
+ 	
+ 	<select id="getMatcheScheduleByTeamId" parameterType="String" resultType="MatchSchedule">
+        SELECT DISTINCT match_schedule.*
+        FROM favorite_team JOIN match_schedule
+          ON favorite_team.team_id = match_schedule.home_team_id
+          OR favorite_team.team_id = match_schedule.away_team_id
+        WHERE favorite_team.user_id = #{userId}
+    </select>
+ 	 	
+ 	<insert id="insertMatchSchedule" parameterType="MatchSchedule">
+        INSERT INTO match_schedule (match_id, sport_name, date, time, home_team_id, away_team_id, location)
+        VALUES (#{matchId}, #{sportName}, #{date}, #{time}, #{homeTeamId}, #{awayTeamId}, #{location})
+    </insert>
+
+    <update id="updateMatchSchedule" parameterType="MatchSchedule">
+        UPDATE match_schedule
+        SET sport_name = #{sportName},
+            date = #{date},
+            time = #{time},
+            home_team_id = #{homeTeamId},
+            away_team_id = #{awayTeamId},
+            location = #{location}
+        WHERE match_id = #{matchId}
+    </update>
+
+    <delete id="deleteMatchSchedule" parameterType="int">
+        DELETE FROM match_schedule
+        WHERE match_id = #{matchId}
+    </delete>
+ 	
+ 	
+ </mapper>
