@@ -6,7 +6,7 @@ import com.everymatch.mvc.model.dto.User;
 
 public interface UserDao {
 	
-	public List<User> getAllUser();
+	public List<User> getAllUsers();
 	
 	public User getUserById(String userId);
 	
