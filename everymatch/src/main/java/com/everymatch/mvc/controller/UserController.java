@@ -1,5 +1,7 @@
 package com.everymatch.mvc.controller;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.everymatch.mvc.model.dto.User;
 import com.everymatch.mvc.model.service.UserService;
+import com.everymatch.mvc.util.JwtUtil;
 
 @RestController
 @RequestMapping("/api-user")
@@ -23,6 +25,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	//회원가입
 	@PostMapping("/regist")
@@ -33,7 +38,7 @@ public class UserController {
 			if(userService.checkEmail(user.getEmail()))
 				return new ResponseEntity<>("이미 존재하는 이메일", HttpStatus.BAD_REQUEST);
 			userService.registUser(user);
-			return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
+			return new ResponseEntity<>("회원가입 성", HttpStatus.OK);
 		} catch(Exception e) {
 			return new ResponseEntity<>("회원가입 에러 발생", HttpStatus.BAD_REQUEST);
 		}
@@ -41,10 +46,18 @@ public class UserController {
 	
 	//로그인
 	@PostMapping("/login")
-	public ResponseEntity<String> loginUser(@RequestParam String userId, @RequestParam String password) {
-		if(userService.loginUser(userId, password))
-			return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
-		return new ResponseEntity<>("로그인 실패", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<HashMap<String, Object>> loginUser(@RequestParam String userId, @RequestParam String password) {
+		
+		HashMap<String, Object> result = new HashMap<>();
+		
+		if(userService.loginUser(userId, password)) {
+			result.put("message", "success");
+			result.put("access-token", jwtUtil.createToken("userId", userId));
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		}
+		else
+			result.put("message", "fail");
+		return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 	   
 	}
 	
