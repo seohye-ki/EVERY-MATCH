@@ -23,7 +23,7 @@ public class FavoriteTeamServiceImpl implements FavoriteTeamService {
 	public List<Integer> getFavoriteTeams(String userId) {
 		if(userDao.getUserById(userId) == null)
 			return null;
-		return favoriteTeamDao.getFavoriteTeamsByUserId(userId);
+		return favoriteTeamDao.getFavoriteTeamsByUserId(userId); 
 	}
 	
 	@Override
@@ -32,5 +32,10 @@ public class FavoriteTeamServiceImpl implements FavoriteTeamService {
 		for(Integer teamId : teamIds) {
 			favoriteTeamDao.insertFavoriteTeam(new FavoriteTeam(userId, teamId));
 		}
+	}
+
+	@Override
+	public List<String> getUserIdsByTeamIds(int homeTeamId, int awayTeamId) {
+		return favoriteTeamDao.getUserIdsByTeamIds(homeTeamId, awayTeamId);
 	}
 }

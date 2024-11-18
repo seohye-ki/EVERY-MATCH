@@ -31,4 +31,11 @@
  		VALUES (#{userId}, #{teamId})
  	</insert>
  
+ 	<select id="getUserIdsByTeamIds" resultType="String">
+ 		SELECT DISTINCT user_id
+ 		FROM favorite_team
+ 		WHERE team_id = #{homeTeamId}
+ 			OR team_id = #{awayTeamId}
+ 	</select>
+ 
  </mapper>

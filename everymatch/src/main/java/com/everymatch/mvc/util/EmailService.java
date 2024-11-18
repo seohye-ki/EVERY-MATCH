@@ -9,8 +9,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.everymatch.mvc.model.dao.UserDao;
+import com.everymatch.mvc.model.dto.MatchSchedule;
 import com.everymatch.mvc.model.dto.User;
+import com.everymatch.mvc.model.service.FavoriteTeamService;
+import com.everymatch.mvc.model.service.MatchScheduleService;
+import com.everymatch.mvc.model.service.SportTeamService;
 import com.everymatch.mvc.model.service.UserService;
 
 import jakarta.mail.internet.MimeMessage;
@@ -22,13 +25,16 @@ public class EmailService {
 	private JavaMailSender javaMailSender;
 	
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
 	private MatchScheduleService matchScheduleService;
 	
 	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private SportTeamService sportTeamService;
+	
+	@Autowired
+	private FavoriteTeamService favoriteTeamService;
 	
 	//메일 보내기
 	public void sendEmail(String to, String subject, String content) {
@@ -53,14 +59,15 @@ public class EmailService {
     	
         //경기리스트를 돌면서 해당 경기의 팀 혹은 어웨이 팀을 관심팀으로 설정한 사용자들에게 메일 전
         for(MatchSchedule match : upcomingMatches) {
-        	HashMap<String, String> likeUsers = userService.findUsersByFavoriteTeam(match.getHomeTeamId(), match.getAwayTeamId());
+        	List<String> likeUserIds = favoriteTeamService.getUserIdsByTeamIds(match.getHomeTeamId(), match.getAwayTeamId());
         	
-        	for(User user: likeUsers) {
+        	for(String userId: likeUserIds) {
+        		User user = userService.detailUser(userId);
         		String content = "	<div style='text-align: center;'>"
         				+ "<h1>Today's Match</h1>"
         				+ "<h3 안녕하세요, " + user.getNickname() + "님! 경기시작 1시간 전입니다.</h3>"
         				+ "<br>"
-        				+ "<h4>경기 정보 : " + sportTeamService.getTeamNameByTeamId(match.getHomeTeamId()) + " VS " + sportTeamService.getTeamNameByTeamId(match.getHomeTeamId()) + "</h4>"
+        				+ "<h4>경기 정보 : " + sportTeamService.getSportTeamNameByTeamId(match.getHomeTeamId()) + " VS " + sportTeamService.getSportTeamNameByTeamId(match.getHomeTeamId()) + "</h4>"
         				+ "<h4>경기 장소 및 시간 : " + match.getTime() + " "  + match.getLocation() + "</h4>"
         				+ "</div>";
         		sendEmail(user.getEmail(), "오늘의 경기", content);

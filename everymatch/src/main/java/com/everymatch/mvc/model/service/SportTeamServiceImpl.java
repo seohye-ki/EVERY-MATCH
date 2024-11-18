@@ -28,4 +28,10 @@ public class SportTeamServiceImpl implements SportTeamService {
 		return team;
 	}
 
+	@Override
+	public String getSportTeamNameByTeamId(int teamId) {
+		String teamName = sportTeamDao.getSportTeamNameByTeamId(teamId);
+		return teamName;
+	}
+
 }
