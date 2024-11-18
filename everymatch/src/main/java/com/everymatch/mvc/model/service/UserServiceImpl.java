@@ -1,7 +1,7 @@
 package com.everymatch.mvc.model.service;
 
 import org.springframework.stereotype.Service;
-
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import com.everymatch.mvc.model.dao.UserDao;
 import com.everymatch.mvc.model.dto.User;
 
@@ -17,6 +17,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void registUser(User user) throws Exception {
 		try {
+			String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+			user.setPassword(hashedPassword);
 			userDao.insertUser(user);
 		} catch (Exception e) {
 			throw new Exception("regist failed", e);
@@ -26,9 +28,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean loginUser(String userId, String password) {
 		User user = userDao.getUserById(userId);
-		if(user == null || !user.getPassword().equals(password))
+		if(user == null)
 			return false;
-		return true;
+		return BCrypt.checkpw(password, user.getPassword());
 	}
 
 	@Override
@@ -56,9 +58,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean changePassword(String userId, String oldPassword, String newPassword) {
 		User user = userDao.getUserById(userId);
+		if(user == null)
+			return false;
 		
-		if(user.getPassword().equals(oldPassword)) {
-			user.setPassword(newPassword);
+		if(BCrypt.checkpw(oldPassword, user.getPassword())) {
+			String hashedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+			user.setPassword(hashedNewPassword);
 			userDao.updateUser(user);
 			return true;
 		}

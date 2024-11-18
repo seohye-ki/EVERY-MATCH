@@ -85,7 +85,9 @@ public class UserController {
 	//비밀번호 수정
 	@PutMapping("/change")
 	public ResponseEntity<String> changePassword(@RequestParam String userId, @RequestParam String oldPassword, @RequestParam String newPassword) {
-		return null;
+		if(userService.changePassword(userId, oldPassword, newPassword))
+            return new ResponseEntity<>("비밀번호 변경 성공", HttpStatus.OK);
+        return new ResponseEntity<>("비밀번호 변경 실패", HttpStatus.BAD_REQUEST);
 	}
 	
 	//회원탈퇴
