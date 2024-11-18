@@ -33,5 +33,12 @@
         WHERE match_id = #{matchId}
     </delete>
  	
+ 	<select id="getMatchesByTime" resultType="MatchSchedule">
+ 		SELECT *
+ 		FROM match_schedule
+ 		WHERE date = DATE(#{time})
+ 			AND time = TIME(#{time})                                                                                                                                                                                         = #{time}
+ 	</select>
+ 	
  	
  </mapper>

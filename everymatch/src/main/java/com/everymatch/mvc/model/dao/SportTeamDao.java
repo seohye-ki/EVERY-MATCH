@@ -20,5 +20,8 @@ public interface SportTeamDao {
     	
 	//스포츠팀 정보 업데이트
 	public void updateSportTeam(SportTeam team);
+
+	//스포츠팀명 가져오기
+	public String getSportTeamNameByTeamId(int teamId);
 	
 }

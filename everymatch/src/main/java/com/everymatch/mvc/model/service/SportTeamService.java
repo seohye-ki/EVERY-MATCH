@@ -8,6 +8,8 @@ public interface SportTeamService {
 
 	List<SportTeam> getAllSportTeams();
 
-	SportTeam getSportTeamByTeamId(Integer id);
+	SportTeam getSportTeamByTeamId(Integer teamId);
+
+	String getSportTeamNameByTeamId(int teamId);
 	
 }

@@ -1,5 +1,6 @@
 package com.everymatch.mvc.model.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -19,5 +20,10 @@ public class MatchScheduleServiceImpl implements MatchScheduleService {
 	@Override
 	public List<MatchSchedule> getMatchScheduleByUserId(String userId) {
 		return matchScheduleDao.getMatcheScheduleByUserFavoriteTeamId(userId);
+	}
+
+	@Override
+	public List<MatchSchedule> getMatchesByTime(LocalDateTime time) {
+		return matchScheduleDao.getMatchesByTime(time);
 	}
 }

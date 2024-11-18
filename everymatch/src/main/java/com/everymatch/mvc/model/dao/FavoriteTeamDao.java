@@ -21,4 +21,7 @@ public interface FavoriteTeamDao {
     
     //한 행 추가 
     public void insertFavoriteTeam(FavoriteTeam ft);
+
+    //홈팀 또는 어웨이팀을 관심팀으로 설정한 유저 아이디 반환 
+	public List<String> getUserIdsByTeamIds(int homeTeamId, int awayTeamId);
 }

@@ -9,4 +9,8 @@ public interface FavoriteTeamService {
 	
 	//현재 관심팀 정보
 	public List<Integer> getFavoriteTeams(String userId);
+
+	//경기에 관심있는 유저 반환
+	public List<String> getUserIdsByTeamIds(int homeTeamId, int awayTeamId);
+
 }
