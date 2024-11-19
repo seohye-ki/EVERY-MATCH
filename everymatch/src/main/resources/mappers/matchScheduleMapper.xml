@@ -4,11 +4,11 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="com.everymatch.mvc.model.dao.MatchScheduleDao">
  	
- 	<select id="getMatcheScheduleByTeamId" parameterType="String" resultType="MatchSchedule">
+ 	<select id="getMatchScheduleByUserFavoriteTeamId" parameterType="String" resultType="MatchSchedule">
         SELECT DISTINCT match_schedule.*
         FROM favorite_team JOIN match_schedule
-          ON favorite_team.team_id = match_schedule.home_team_id
-          OR favorite_team.team_id = match_schedule.away_team_id
+          ON favorite_team.team_id = match_schedule.hometeam_id
+          OR favorite_team.team_id = match_schedule.awayteam_id
         WHERE favorite_team.user_id = #{userId}
     </select>
  	 	

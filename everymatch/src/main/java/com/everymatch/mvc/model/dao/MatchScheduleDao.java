@@ -7,7 +7,7 @@ import com.everymatch.mvc.model.dto.MatchSchedule;
 
 public interface MatchScheduleDao {
 	
-	List<MatchSchedule> getMatcheScheduleByUserFavoriteTeamId(String usrId);
+	List<MatchSchedule> getMatchScheduleByUserFavoriteTeamId(String usrId);
 	
 	int insertMatchSchedule(MatchSchedule matchSchedule);
 	
