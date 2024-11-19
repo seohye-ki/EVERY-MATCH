@@ -62,7 +62,7 @@ public class EmailService {
         	List<String> likeUserIds = favoriteTeamService.getUserIdsByTeamIds(match.getHomeTeamId(), match.getAwayTeamId());
         	
         	for(String userId: likeUserIds) {
-        		User user = userService.detailUser(userId);
+        		User user = userService.getUserDetails(userId);
         		String content = "	<div style='text-align: center;'>"
         				+ "<h1>Today's Match</h1>"
         				+ "<h3 안녕하세요, " + user.getNickname() + "님! 경기시작 1시간 전입니다.</h3>"
