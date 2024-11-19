@@ -18,7 +18,7 @@ import com.everymatch.mvc.model.service.FavoriteTeamService;
 import com.everymatch.mvc.model.service.SportTeamService;
 
 @RestController
-@RequestMapping("/api-favorite")
+@RequestMapping("/api/favorite")
 public class FavoriteTeamController {
 
 	private final FavoriteTeamService favoriteTeamService;

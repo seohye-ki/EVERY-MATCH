@@ -13,7 +13,7 @@ import com.everymatch.mvc.model.dto.MatchSchedule;
 import com.everymatch.mvc.model.service.MatchScheduleService;
 
 @RestController
-@RequestMapping("/api-match")
+@RequestMapping("/api/match")
 public class MatchScheduleController {
 	
 	private final MatchScheduleService matchScheduleService;
