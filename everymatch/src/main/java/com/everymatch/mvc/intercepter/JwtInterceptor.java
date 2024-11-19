@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtInterceptor implements AsyncHandlerInterceptor{
-	private final String HEADER_AUTH = "";
+	private final String HEADER_AUTH = "Authorization";
 	
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -19,9 +19,12 @@ public class JwtInterceptor implements AsyncHandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 	
+		System.out.println("Intercepted Request URL: " + request.getRequestURI());
+		
 		//클라이언트의 사전 요청 
 		if(request.getMethod().equals("OPTIONS"))
 				return true;
+		
 		
 		String token =  request.getHeader(HEADER_AUTH);
 		if(token != null) {
