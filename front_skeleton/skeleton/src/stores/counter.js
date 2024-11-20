@@ -2,6 +2,11 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api',  // 백엔드 API 기본 URL
+  timeout: 5000,
+});
+
 export const useUserStore = defineStore('user', () => {
   const user = ref({
     nickname: '',
@@ -25,12 +30,13 @@ export const useUserStore = defineStore('user', () => {
 
   const submitRegist = async () => {
     try {
-      const response = await axios.post('/regist', {
+      const send = {
         nickname: user.value.nickname,
-        id: user.value.id,
+        userId: user.value.id,
         password: user.value.password,
         email: user.value.email,
-      })
+      }
+      const response = await api.post('/user/regist', send)
       console.log('회원가입 성공:', response.data)
     } catch (error) {
       console.error('회원가입 실패:', error.response?.data || error.message)

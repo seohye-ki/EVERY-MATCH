@@ -1,11 +1,15 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-
 import Id from '@/components/Id.vue'
 import Pw from '@/components/Pw.vue'
 import CenterIcon from '@/components/CenterIcon.vue';
 
 import {ref} from 'vue'
+import axios from "axios"
+
+const api = axios.create({
+    baseURL: 'http://localhost:8080/api',
+    timeout: 5000,
+  });
 
 const id = ref()
 const pw = ref()
@@ -13,12 +17,12 @@ const pw = ref()
 const login = async () => {
     if (id.value && pw.value) {
         try {
-            const response = await axios.post('/user/login', {
-                id: id.value,
-                password: pw.value
-            })
+            const formData = new FormData()
+            formData.append('userId', id.value)
+            formData.append('password', pw.value)
+            const response = await api.post('/user/login', formData)
 
-            if (response.data && response.data.success) {
+            if (response.data) {
                 console.log('로그인 성공', response.data)
                 router.push('/main')
             }
