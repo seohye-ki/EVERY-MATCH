@@ -15,7 +15,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 	
-	private static final String SALT = "EVERY_MATCH_JH_SH12345678901234567890";
+	private static final String SALT = "SSAFY_FINAL_PROJECT_EVERY_MATCH_LJH_KSH";
 	private SecretKey secretKey = Keys.hmacShaKeyFor(SALT.getBytes(StandardCharsets.UTF_8));
 	
 	public String createToken(String claimId, String data) {

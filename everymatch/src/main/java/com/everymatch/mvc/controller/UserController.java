@@ -46,6 +46,14 @@ public class UserController {
 		}
 	}
 	
+	//임시비밀번호 발급 
+	@PostMapping("/reset-password")
+	public ResponseEntity<String> resetPassword(@RequestParam String userId, @RequestParam String email){
+		if(userService.resetPassword(userId, email))
+			return new ResponseEntity<>("임시 비밀번호 발급 성공", HttpStatus.OK);
+		return new ResponseEntity<>("임시 비밀번호 발급 실패", HttpStatus.BAD_REQUEST);
+	}
+	
 	//로그인
 	@PostMapping("/login")
 	public ResponseEntity<HashMap<String, Object>> login(@RequestParam String userId, @RequestParam String password) {
@@ -62,7 +70,7 @@ public class UserController {
 	   
 	}
 	
-	//마이페이지 - 회원정보 상세
+	//회원정보 상세
 	@GetMapping("/{userId}")
 	public ResponseEntity<User> getUser(@PathVariable String userId) {
 		User user = userService.getUserDetails(userId);
