@@ -84,10 +84,10 @@ const formatDate = (date) => {
     <div>
         <img src="@/assets/SMALL.png"/>
         <div>
-            마이페이지
+            <a href="myPage/pw">마이페이지</a>
         </div>
         <div>
-            Favorite Team
+          <a href="favorite">Favorite Team</a> 
         </div>
         <div>
             Logout

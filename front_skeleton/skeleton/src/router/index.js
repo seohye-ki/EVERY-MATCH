@@ -8,6 +8,11 @@ import PwView from '@/views/regist/PwView.vue'
 import EmailView from '@/views/regist/EmailView.vue'
 import FinView from '@/views/regist/FinView.vue'
 import MainView from '@/views/MainView.vue'
+import MyPageView from '@/views/MyPageView.vue'
+import PasswordView from '@/views/my/PasswordView.vue'
+import ChangeInfoView from '@/views/my/ChangeInfoView.vue'
+import ChangePasswordView from '@/views/my/ChangePasswordView.vue'
+import FavoriteTeam from '@/views/FavoriteTeam.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +31,11 @@ const router = createRouter({
       path: '/find',
       name: 'FindPw',
       component: FindPwView,
+    },
+    {
+      path: '/favorite',
+      name: 'FavoriteTeam',
+      component: FavoriteTeam,
     },
     {
       path: '/regist',
@@ -56,6 +66,28 @@ const router = createRouter({
           path: 'fin',
           name: 'Regist_fin',
           component: FinView,
+        },
+      ],
+    },
+    {
+      path: '/myPage',
+      name: 'MyPage',
+      component: MyPageView,
+      children: [
+        {
+          path: 'pw',
+          name: 'Password',
+          component: PasswordView,
+        },
+        {
+          path: 'info',
+          name: 'Info',
+          component: ChangeInfoView,
+        },
+        {
+          path: 'changePW',
+          name: 'ChangePW',
+          component: ChangePasswordView,
         },
       ],
     },
