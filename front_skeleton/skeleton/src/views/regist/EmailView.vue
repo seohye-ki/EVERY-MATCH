@@ -1,5 +1,5 @@
 <script setup>
-import { useRouter, RouterView } from 'vue-router'
+import { useRouter} from 'vue-router'
 import { useUserStore } from '@/stores/counter'
 import { ref } from 'vue'
 
