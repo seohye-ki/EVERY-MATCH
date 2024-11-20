@@ -1,12 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import CenterIcon from '@/components/CenterIcon.vue';
 
 </script>
 
 <template>
-
-<CenterIcon />
 
     <fieldset>
         <router-view></router-view>
@@ -15,5 +12,7 @@ import CenterIcon from '@/components/CenterIcon.vue';
 </template>
 
 <style scoped>
-
+* {
+  background-color: #f9f9f9;
+}
 </style>
