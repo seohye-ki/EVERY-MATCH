@@ -15,14 +15,14 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 	
-	private static final String SALT = "EVERY_MATCH_JH_SH";
+	private static final String SALT = "EVERY_MATCH_JH_SH12345678901234567890";
 	private SecretKey secretKey = Keys.hmacShaKeyFor(SALT.getBytes(StandardCharsets.UTF_8));
 	
 	public String createToken(String claimId, String data) {
 		
 		Date exp = new Date(System.currentTimeMillis() + 1000*60*60);
 		
-		return Jwts.builder().header().add("typ", "JWT").and()
+		return Jwts.builder() 
 				.expiration(exp)
 				.claim("data", data)
 				.signWith(secretKey)

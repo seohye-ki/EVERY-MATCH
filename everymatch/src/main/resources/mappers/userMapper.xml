@@ -10,7 +10,7 @@
     </select>
 
     <select id="getUserById" parameterType="String" resultType="User">
-        SELECT user_id, nickname, email, user_img
+        SELECT *
         FROM user
         WHERE user_id = #{userId};
     </select>

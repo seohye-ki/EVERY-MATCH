@@ -19,7 +19,7 @@ public class MatchScheduleServiceImpl implements MatchScheduleService {
 	
 	@Override
 	public List<MatchSchedule> getMatchScheduleByUserId(String userId) {
-		return matchScheduleDao.getMatcheScheduleByUserFavoriteTeamId(userId);
+		return matchScheduleDao.getMatchScheduleByUserFavoriteTeamId(userId);
 	}
 
 	@Override

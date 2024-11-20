@@ -1,9 +1,10 @@
 package com.everymatch.mvc.model.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+
 import com.everymatch.mvc.model.dao.UserDao;
 import com.everymatch.mvc.model.dto.User;
+import com.everymatch.mvc.util.PasswordUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,7 +18,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void registerUser(User user) throws Exception {
 		try {
-			String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+			String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
 			user.setPassword(hashedPassword);
 			userDao.insertUser(user);
 		} catch (Exception e) {
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
 		User user = userDao.getUserById(userId);
 		if(user == null)
 			return false;
-		return BCrypt.checkpw(password, user.getPassword());
+		return PasswordUtil.verifyPassword(password, user.getPassword());
 	}
 
 	@Override
@@ -61,8 +62,8 @@ public class UserServiceImpl implements UserService {
 		if(user == null)
 			return false;
 		
-		if(BCrypt.checkpw(oldPassword, user.getPassword())) {
-			String hashedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+		if(PasswordUtil.verifyPassword(oldPassword, user.getPassword())) {
+			String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
 			user.setPassword(hashedNewPassword);
 			userDao.updateUser(user);
 			return true;

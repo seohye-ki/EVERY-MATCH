@@ -5,7 +5,6 @@ import java.time.LocalTime;
 
 public class MatchSchedule {
     private int matchId;
-    private String sportName;
     private LocalDate date;
     private LocalTime time;
     private int homeTeamId;
@@ -15,9 +14,8 @@ public class MatchSchedule {
     public MatchSchedule() {
     }
 
-    public MatchSchedule(int matchId, String sportName, LocalDate date, LocalTime time, int homeTeamId, int awayTeamId, String location) {
+    public MatchSchedule(int matchId, LocalDate date, LocalTime time, int homeTeamId, int awayTeamId, String location) {
         this.matchId = matchId;
-        this.sportName = sportName;
         this.date = date;
         this.time = time;
         this.homeTeamId = homeTeamId;
@@ -65,14 +63,6 @@ public class MatchSchedule {
         this.date = date;
     }
 
-    public String getSportName() {
-        return sportName;
-    }
-
-    public void setSportName(String sportName) {
-        this.sportName = sportName;
-    }
-
     public int getMatchId() {
         return matchId;
     }
@@ -85,7 +75,6 @@ public class MatchSchedule {
     public String toString() {
         return "MatchSchedule{" +
                 "matchId=" + matchId +
-                ", sportName='" + sportName + '\'' +
                 ", date=" + date +
                 ", time=" + time +
                 ", homeTeamId=" + homeTeamId +
