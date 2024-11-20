@@ -7,6 +7,7 @@ import NicknameView from '@/views/regist/NicknameView.vue'
 import PwView from '@/views/regist/PwView.vue'
 import EmailView from '@/views/regist/EmailView.vue'
 import FinView from '@/views/regist/FinView.vue'
+import MainView from '@/views/MainView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/',
       name: 'Login',
       component: Login,
+    },
+    {
+      path: '/main',
+      name: 'Main',
+      component: MainView,
     },
     {
       path: '/find',

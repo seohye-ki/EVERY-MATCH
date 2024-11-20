@@ -5,11 +5,14 @@ import CenterIcon from '@/components/CenterIcon.vue';
 
 import {ref} from 'vue'
 import axios from "axios"
+import { useRouter} from 'vue-router'
 
 const api = axios.create({
     baseURL: 'http://localhost:8080/api',
     timeout: 5000,
   });
+
+const useRou = useRouter()
 
 const id = ref()
 const pw = ref()
@@ -24,7 +27,8 @@ const login = async () => {
 
             if (response.data) {
                 console.log('로그인 성공', response.data)
-                router.push('/main')
+                sessionStorage.setItem('access_token', response.data['access-token'])
+                useRou.push('/main')
             }
             else {
                 alert('로그인 실패')
