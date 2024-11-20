@@ -4,15 +4,18 @@ import org.springframework.stereotype.Service;
 
 import com.everymatch.mvc.model.dao.UserDao;
 import com.everymatch.mvc.model.dto.User;
+import com.everymatch.mvc.util.EmailUtil;
 import com.everymatch.mvc.util.PasswordUtil;
 
 @Service
 public class UserServiceImpl implements UserService {
 
 	private final UserDao userDao;
+	private final EmailUtil emailUtil;
 	
-	public UserServiceImpl(UserDao userDao) {
+	public UserServiceImpl(UserDao userDao, EmailUtil emailUtil) {
 		this.userDao = userDao;
+		this.emailUtil = emailUtil;
 	}
 	
 	@Override
@@ -48,11 +51,28 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean passwordReset(String userId, String email) {
+	public boolean resetPassword(String userId, String email) {
 		User user = userDao.getUserById(userId);
 		//아이디에 맞는 유저가 없거나 아이디로 찾은 사용자의 이메일과 일치하지 않는 경우
 		if(user == null || !user.getEmail().equals(email))
 			return false;
+		
+		//임시 비밀번호 생성
+		String temporaryPassword = PasswordUtil.generateRandomPassword();
+		//암호화해서 DB업데이트
+		String hashedPassword = PasswordUtil.hashPassword(temporaryPassword);
+		user.setPassword(hashedPassword);
+		userDao.updateUser(user);
+		
+		//이메일 전송
+		String content = "<div style='text-align: center;'>"
+	            + "<h1>임시 비밀번호 발급</h1>"
+	            + "<p>안녕하세요, " + user.getNickname() + "님!</p>"
+	            + "<p>요청하신 임시 비밀번호는 다음과 같습니다.</p>"
+	            + "<h3>임시 비밀번호: " + temporaryPassword + "</h3>"
+	            + "<p>로그인 후 비밀번호를 꼭 변경해 주세요.</p>"
+	            + "</div>";
+		emailUtil.sendEmail(user.getEmail(), "[EVERYMATCH]임시 비밀번호 발급 안내", content);
 		return true;
 	}
 
