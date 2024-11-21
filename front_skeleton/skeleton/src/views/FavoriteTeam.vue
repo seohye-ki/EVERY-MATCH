@@ -9,9 +9,27 @@ const api = axios.create({
   baseURL: 'http://localhost:8080/api',  
 });
 
+api.interceptors.request.use(
+  (config) => {
+    // sessionStorage에서 JWT 토큰 가져오기
+    const token = sessionStorage.getItem('Authorization');
+    // 토큰이 존재하면 Authorization 헤더에 추가
+    if (token) {
+      config.headers['Authorization'] = `${token}`;
+    }
+    
+    // config 반환 (요청을 보내기 위해)
+    return config;
+  },
+  (error) => {
+    // 요청 오류 처리
+    return Promise.reject(error);
+  }
+);
+
 onBeforeMount(async () => {
   try {
-    const response = await api.get('/favorite/user001')
+    const response = await api.get('/favorite')
     teams.value = response.data.allTeams
     showTeams.value = teams.value
     favoriteTeams.value = response.data.favoriteTeams
@@ -48,7 +66,7 @@ const storage = async () => {
     const Ids = favoriteTeams.value.map(team => team.teamId);
     console.log(Ids)
     try {
-    const response = await api.put('/favorite/user001', Ids)
+    const response = await api.put('/favorite', Ids)
     if (response.status === 200) {
         alert("완료")
         useRout.push("main")
