@@ -5,11 +5,20 @@
  <mapper namespace="com.everymatch.mvc.model.dao.MatchScheduleDao">
  	
  	<select id="getMatchScheduleByUserFavoriteTeamId" parameterType="String" resultType="MatchSchedule">
-        SELECT DISTINCT match_schedule.*
-        FROM favorite_team JOIN match_schedule
-          ON favorite_team.team_id = match_schedule.hometeam_id
-          OR favorite_team.team_id = match_schedule.awayteam_id
-        WHERE favorite_team.user_id = #{userId}
+        SELECT DISTINCT 
+	        ms.match_id AS match_id,
+	        ms.date AS date,
+	        ms.time AS time,
+	        ht.team_name AS home_team_name,
+	        at.team_name AS away_team_name,
+	        ms.location AS location
+	    FROM favorite_team ft
+	    JOIN match_schedule ms
+	        ON ft.team_id = ms.hometeam_id
+	        OR ft.team_id = ms.awayteam_id
+	    LEFT JOIN sport_team ht ON ms.hometeam_id = ht.team_id
+	    LEFT JOIN sport_team at ON ms.awayteam_id = at.team_id
+	    WHERE ft.user_id = #{userId}
     </select>
  	 	
  	<insert id="insertMatchSchedule" parameterType="MatchSchedule">
