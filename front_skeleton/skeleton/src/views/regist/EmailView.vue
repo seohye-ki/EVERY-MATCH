@@ -1,24 +1,22 @@
 <script setup>
-import { useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/counter'
 import { ref } from 'vue'
-import axios from "axios";
-
+import axios from "axios"
+import showAlert from '@/utils/swal';
 
 const api = axios.create({
     baseURL: 'http://localhost:8080/api',
     timeout: 5000,
-  });
+});
 
-const useRou = useRouter()
+const router = useRouter()
 const userStore = useUserStore()
 
 const email = ref('')
-const isInvalidEmail = ref(false)
-const isDuplicateEmail = ref(false)
 
 const prevStep = () => {
-    useRou.push('/regist/id') 
+    router.push('/regist/id') 
 }
 
 const isValidEmailFormat = (email) => {
@@ -28,62 +26,51 @@ const isValidEmailFormat = (email) => {
 
 const checkEmailDuplicate = async () => {
   try {
-	const formData = new FormData()
+    const formData = new FormData()
     formData.append('email', email.value)
     const response = await api.post("user/check/email", formData)
 
     if (response.status === 200) {
-      isDuplicateEmail.value = false
       return true
     }
   } catch (error) {
     if (error.response && error.response.status === 409) {
-      isDuplicateEmail.value = true
+      await showAlert('이메일 중복', '이 이메일은 이미 사용 중입니다. 다른 이메일을 입력해 주세요.', 'error')
     } else {
       console.error("서버 오류 발생:", error)
+      await showAlert('서버 오류', '이메일 확인 중 문제가 발생했습니다. 다시 시도해주세요.', 'error')
     }
     return false
   }
 }
 
 const nextStep = async (event) => {
-	event.preventDefault()
-	if (!isValidEmailFormat(email.value)) {
-		isInvalidEmail.value = true
-		return
-	} else {
-		isInvalidEmail.value = false
-	}
+  event.preventDefault()
+  if (!isValidEmailFormat(email.value)) {
+    await showAlert('입력 오류', '이메일 주소가 올바르지 않아요. 정확한 형식으로 입력해 주세요.', 'warning')
+    return
+  }
 
-	const isNotDuplicate = await checkEmailDuplicate();
-	if (isNotDuplicate) {
-		userStore.setEmail(email.value)
-		userStore.submitRegist()
-		useRou.push("/regist/fin")
-	}
+  const isNotDuplicate = await checkEmailDuplicate()
+  if (isNotDuplicate) {
+    userStore.setEmail(email.value)
+    userStore.submitRegist()
+    router.push("/regist/fin")
+  }
 }
 </script>
 
 <template>
-<div class="container vh-100 d-flex justify-content-center align-items-center">
-    <div
-      class="card shadow-sm p-5"
-      style="max-width: 900px; width: 100%; border-radius: 15px;"
-    >
+  <div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card shadow-sm p-5 email-card">
       <div class="d-flex align-items-center justify-content-between">
-        <!-- 왼쪽 섹션 -->
+
         <div>
-          <img
-            src="/src/assets/SMALL.png"
-            alt="Icon"
-            class="mb-3"
-            style="width: 40px; height: 40px;"
-          />
+          <img src="/src/assets/SMALL.png" alt="Icon" class="mb-3 icon" />
           <h4 class="fw-normal">이메일 입력</h4>
         </div>
 
-        <!-- 오른쪽 섹션 -->
-        <div style="width: 40%;">
+        <div class="form-section">
           <form @submit.prevent="nextStep">
             <div class="mb-3">
               <label for="email" class="form-label fw-bold">
@@ -96,31 +83,14 @@ const nextStep = async (event) => {
                 class="form-control"
                 placeholder="이메일을 입력하세요"
                 required
-                style="border-radius: 10px;"
-                @input="isInvalidEmail = false; isDuplicateEmail = false"
+                @input="isDuplicateEmail = false"
               />
             </div>
-            <!-- 에러 메시지 -->
-            <small v-if="isInvalidEmail" class="text-danger mt-2 d-block">
-              * 이메일 주소가 올바르지 않아요. 정확한 형식으로 입력해 주세요.
-            </small>
-			<small v-if="isDuplicateEmail" class="text-danger mt-2 d-block">
-              * 이 이메일은 이미 사용 중입니다. 다른 이메일을 입력해 주세요.
-            </small>
             <div class="d-flex justify-content-between mt-4">
-              <button
-                type="button"
-                @click="prevStep"
-                class="btn btn-outline-secondary"
-                style="border-radius: 10px;"
-              >
+              <button type="button" @click="prevStep" class="btn btn-outline-secondary prev-btn">
                 &lt; 이전
               </button>
-              <button
-                type="submit"
-                class="btn btn-danger"
-                style="border-radius: 10px;"
-              >
+              <button type="submit" class="btn btn-danger next-btn">
                 다음
               </button>
             </div>
@@ -132,5 +102,22 @@ const nextStep = async (event) => {
 </template>
 
 <style scoped>
+.email-card {
+  max-width: 900px;
+  width: 100%;
+  border-radius: 15px;
+}
 
+.icon {
+  width: 40px;
+  height: 40px;
+}
+
+.form-section {
+  width: 40%;
+}
+
+.prev-btn, .next-btn {
+  border-radius: 10px;
+}
 </style>
