@@ -29,6 +29,7 @@ const login = async () => {
         if (response.status === 200) {
             console.log('로그인 성공', response.data)
             await showAlert('로그인 성공', '환영합니다!', 'success')
+            sessionStorage.setItem("Authorization", response.data['access-token'])
             router.push('/main')
         }
     } catch (error) {

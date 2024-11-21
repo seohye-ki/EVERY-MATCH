@@ -2,6 +2,8 @@
 import { watch, ref, onBeforeMount } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction';
+import Match from '@/components/Match.vue';
 import axios from 'axios'
 
 const api = axios.create({
@@ -12,7 +14,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // sessionStorage에서 JWT 토큰 가져오기
-    const token = sessionStorage.getItem('access_token');
+    const token = sessionStorage.getItem('Authorization');
     // 토큰이 존재하면 Authorization 헤더에 추가
     if (token) {
       config.headers['Authorization'] = `${token}`;
@@ -26,15 +28,20 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 const events = ref([
     {matchId: 1, date: '2024-08-10', time: '18:00:00', homeTeamId: 1, awayTeamId: 2},
 ])
+
 const can = ref(false)
+const selectedDate=ref()
+const matchs=ref()
 
 onBeforeMount(async () => {
   try {
-    const response = await api.get('/match/schedule/user001')
+    const response = await api.get('/match/schedule')
     events.value = response.data
+    matchs.value = events.value.filter(event => event.date===selectedDate.value)
     can.value = true
   } catch (error) {
     console.error('Error fetching events:', error)
@@ -43,9 +50,10 @@ onBeforeMount(async () => {
 
 
 const calendarOptions = ref({
-    plugins: [dayGridPlugin],
+    plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     weekends: true,
+    selectable: true,
     // 날짜 셀이 렌더링된 후, 이벤트 개수에 따라 색상을 변경
     dayCellDidMount: (info) => {
         // 날짜별 이벤트 개수 계산
@@ -59,8 +67,15 @@ const calendarOptions = ref({
         }
 
         info.el.style.backgroundColor = color;
+    },
+    dateClick: (info) => {
+      selectedDate.value = formatDate(info.date)
     }
 })
+
+watch(selectedDate, (newSelectedDate) => {
+  matchs.value = events.value.filter(event => event.date === newSelectedDate)
+});
 
 // 날짜별 이벤트 개수를 반환하는 메소드
 const getEventCount = (dateStr) => {
@@ -74,7 +89,7 @@ const formatDate = (date) => {
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
-
+selectedDate.value = formatDate(new Date())
 
 </script>
 
@@ -94,9 +109,7 @@ const formatDate = (date) => {
     </div>
     <FullCalendar v-if="can" :options="calendarOptions" />
     <div>
-        <span>
-            안녕
-        </span>
+        <Match v-if="can" v-for="match in matchs" :key="match.matchId" :match="match"/>            
     </div>
 </main>
 </template>
