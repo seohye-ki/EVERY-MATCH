@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -99,6 +98,18 @@ public class UserController {
 		return new ResponseEntity<>("업데이트 성공", HttpStatus.OK);
 	}
 
+	// 비밀번호 확인
+	@PostMapping("/validate-password")
+	public ResponseEntity<String> validatePassword(@RequestHeader("Authorization") String token,
+	        @RequestParam String password) {
+	    String userId = extractUserIdFromToken(token);
+	    if (userService.loginUser(userId, password)) {
+	        return new ResponseEntity<>("올바른 비밀번호", HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>("잘못된 비밀번호", HttpStatus.FORBIDDEN);
+	    }
+	}
+	
 	// 비밀번호 수정
 	@PutMapping("/update-password")
 	public ResponseEntity<String> updatePassword(@RequestHeader("Authorization") String token,
