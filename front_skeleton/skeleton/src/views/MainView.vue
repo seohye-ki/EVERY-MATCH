@@ -13,10 +13,9 @@ api.interceptors.request.use(
   (config) => {
     // sessionStorage에서 JWT 토큰 가져오기
     const token = sessionStorage.getItem('access_token');
-    
     // 토큰이 존재하면 Authorization 헤더에 추가
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['Authorization'] = `${token}`;
     }
     
     // config 반환 (요청을 보내기 위해)
