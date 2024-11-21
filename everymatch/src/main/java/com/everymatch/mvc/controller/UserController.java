@@ -65,7 +65,7 @@ public class UserController {
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		else
-			result.put("message", "로그인 실패");
+			result.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
 		return new ResponseEntity<>(result, HttpStatus.UNAUTHORIZED);
 	   
 	}

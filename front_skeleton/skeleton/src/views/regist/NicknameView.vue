@@ -2,35 +2,41 @@
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/counter'
 import { ref } from 'vue'
+import showAlert from '@/utils/swal'
 
-const useRou = useRouter()
+const router = useRouter()
 const userStore = useUserStore()
+
 const nickname = ref('')
+
 const nextStep = () => {
+    if (!nickname.value.trim()) {
+        showAlert('닉네임을 입력해주세요', '닉네임을 반드시 입력해야 합니다.', 'error')
+        return
+    }
     userStore.setNickname(nickname.value)
-    useRou.push('/regist/id')  
+    router.push('/regist/id')  
 }
 </script>
 
 <template>
-<div class="container vh-100 d-flex justify-content-center align-items-center">
+  <div class="container vh-100 d-flex justify-content-center align-items-center">
     <div
       class="card shadow-sm p-5"
       style="max-width: 900px; width: 100%; border-radius: 15px;"
     >
       <div class="d-flex align-items-center justify-content-between">
-        <!-- 왼쪽 섹션 -->
-        <div>
+        
+		<div>
           <img
             src="/src/assets/SMALL.png"
             alt="Icon"
             class="mb-3"
             style="width: 40px; height: 40px;"
           />
-          <h4 class="fw-nomal">EVERY MATCH 계정 만들기</h4>
+          <h4 class="fw-normal">EVERY MATCH 계정 만들기</h4>
         </div>
 
-        <!-- 오른쪽 섹션 -->
         <div style="width: 40%;">
           <form @submit.prevent="nextStep">
             <div class="mb-4">
@@ -44,8 +50,8 @@ const nextStep = () => {
                 class="form-control"
                 placeholder="닉네임을 입력하세요"
                 maxlength="10"
-                required
                 style="border-radius: 10px;"
+                required
               />
             </div>
             <button
@@ -64,4 +70,16 @@ const nextStep = () => {
 
 <style scoped>
 
+.container {
+  background-color: #f8f9fa;
+}
+.card {
+  border: none;
+}
+.btn {
+  transition: background-color 0.3s;
+}
+.btn:hover {
+  background-color: #c82333;
+}
 </style>
