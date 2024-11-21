@@ -28,7 +28,7 @@ public class JwtInterceptor implements AsyncHandlerInterceptor{
 		
 		String token =  request.getHeader(HEADER_AUTH);
 		if(token != null) {
-			jwtUtil.vaildate(token);
+			jwtUtil.validateClaims(token);
 			return true;
 		}
 		throw new Exception("유효하지 않은 접근입니다.");

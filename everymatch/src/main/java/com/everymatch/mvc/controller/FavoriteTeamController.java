@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class FavoriteTeamController {
 
 	private final JwtUtil jwtUtil;
 
-	public FavoriteTeamController(FavoriteTeamService favoriteTeamService, SportTeamService sportTeamService, , JwtUtil jwtUtil) {
+	public FavoriteTeamController(FavoriteTeamService favoriteTeamService, SportTeamService sportTeamService, JwtUtil jwtUtil) {
 		this.favoriteTeamService = favoriteTeamService;
 		this.sportTeamService = sportTeamService;
 		this.jwtUtil = jwtUtil;
