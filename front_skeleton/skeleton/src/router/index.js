@@ -23,21 +23,6 @@ const router = createRouter({
       component: Login,
     },
     {
-      path: '/main',
-      name: 'Main',
-      component: MainView,
-    },
-    {
-      path: '/find',
-      name: 'FindPw',
-      component: FindPwView,
-    },
-    {
-      path: '/favorite',
-      name: 'FavoriteTeam',
-      component: FavoriteTeam,
-    },
-    {
       path: '/regist',
       name: 'Regist',
       component: RegistView,
@@ -70,6 +55,21 @@ const router = createRouter({
       ],
     },
     {
+      path: '/main',
+      name: 'Main',
+      component: MainView,
+    },
+    {
+      path: '/find',
+      name: 'FindPw',
+      component: FindPwView,
+    },
+    {
+      path: '/favorite',
+      name: 'FavoriteTeam',
+      component: FavoriteTeam,
+    },
+    {
       path: '/myPage',
       name: 'MyPage',
       component: MyPageView,
@@ -93,5 +93,28 @@ const router = createRouter({
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  // 인증이 필요한 페이지에서만 가드를 적용하려면
+  const token = sessionStorage.getItem('Authorization'); // 또는 쿠키에서 읽어오기
+
+  // 특정 페이지 제외 (예: '/public-page', '/login' 같은 페이지는 제외)
+  const excludedRoutes = ['Login', 'FindPw'];
+  if (!token) {
+    if (excludedRoutes.includes(to.name) || to.name.startsWith('Regist')) {
+      next(); // 제외된 페이지는 가드하지 않고 그대로 진행
+    } else {
+      next({ name: 'Login' }); // 토큰이 없으면 로그인 페이지로 리다이렉트  
+    }
+  } else {
+    if (excludedRoutes.includes(to.name) || to.name.startsWith('Regist')) {
+      next({ name: 'Main' })
+    } else {
+      next(); // 토큰이 있으면 정상적으로 페이지 접근
+    }
+  }
+  
+});
+
 
 export default router

@@ -1,15 +1,15 @@
 <script setup>
 import { watch, ref, onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction';
-import Match from '@/components/Match.vue';
+import interactionPlugin from '@fullcalendar/interaction'
+import Match from '@/components/Match.vue'
 import axios from 'axios'
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',  
 });
-
 
 api.interceptors.request.use(
   (config) => {
@@ -36,12 +36,17 @@ const events = ref([
 const can = ref(false)
 const selectedDate=ref()
 const matchs=ref()
+const useRou=useRouter()
 
 onBeforeMount(async () => {
   try {
     const response = await api.get('/match/schedule')
-    events.value = response.data
-    matchs.value = events.value.filter(event => event.date===selectedDate.value)
+    
+    if(response.data.length !== 0) {
+      events.value = response.data
+      matchs.value = events.value.filter(event => event.date===selectedDate.value)
+    } 
+
     can.value = true
   } catch (error) {
     console.error('Error fetching events:', error)
@@ -75,11 +80,16 @@ const calendarOptions = ref({
 
 watch(selectedDate, (newSelectedDate) => {
   matchs.value = events.value.filter(event => event.date === newSelectedDate)
+  useRou.push('')
 });
 
 // 날짜별 이벤트 개수를 반환하는 메소드
 const getEventCount = (dateStr) => {
+  if (event.value === null) {
+    return 0  
+  }
   return events.value.filter(event => event.date === dateStr).length
+  
 }
 
 // 날짜 객체를 'YYYY-MM-DD' 형식의 문자열로 변환하는 함수
@@ -90,6 +100,10 @@ const formatDate = (date) => {
   return `${year}-${month}-${day}`
 }
 selectedDate.value = formatDate(new Date())
+
+const logout = () => {
+  sessionStorage.clear()
+}
 
 </script>
 
@@ -104,7 +118,7 @@ selectedDate.value = formatDate(new Date())
           <a href="favorite">Favorite Team</a> 
         </div>
         <div>
-            Logout
+          <a href="" @click="logout">Log Out</a>
         </div>
     </div>
     <FullCalendar v-if="can" :options="calendarOptions" />
