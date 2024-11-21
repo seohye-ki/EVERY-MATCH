@@ -1,16 +1,14 @@
 <script setup>
-import { defineProps } from 'vue';
 
 const props = defineProps({
-    src : String
+    teamId : Number,
+    teamLogo : String
 })
-
-const emit = defineEmits('teamClick')
 
 </script>
 
 <template>
-    <img :src="'/src/assets/'+props.src+'.png'" @click="$emit(team, props.src)"/>
+    <img :src="'/src/assets/'+props.teamLogo" @click="$emit('plusFavorite', props.teamId)"/>
 </template>
 
 <style scoped>
