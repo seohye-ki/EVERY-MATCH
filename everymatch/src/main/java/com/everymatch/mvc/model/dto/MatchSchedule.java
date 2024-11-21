@@ -7,19 +7,19 @@ public class MatchSchedule {
     private int matchId;
     private LocalDate date;
     private LocalTime time;
-    private int homeTeamId;
-    private int awayTeamId;
+    private String homeTeamName;
+    private String awayTeamName;
     private String location;
 
     public MatchSchedule() {
     }
 
-    public MatchSchedule(int matchId, LocalDate date, LocalTime time, int homeTeamId, int awayTeamId, String location) {
+    public MatchSchedule(int matchId, LocalDate date, LocalTime time, String homeTeamName, String awayTeamName, String location) {
         this.matchId = matchId;
         this.date = date;
         this.time = time;
-        this.homeTeamId = homeTeamId;
-        this.awayTeamId = awayTeamId;
+        this.homeTeamName = homeTeamName;
+        this.awayTeamName = awayTeamName;
         this.location = location;
     }
 
@@ -31,20 +31,20 @@ public class MatchSchedule {
         this.location = location;
     }
 
-    public int getAwayTeamId() {
-        return awayTeamId;
+    public String getAwayTeamName() {
+        return awayTeamName;
     }
 
-    public void setAwayTeamId(int awayTeamId) {
-        this.awayTeamId = awayTeamId;
+    public void setAwayTeamName(String awayTeamName) {
+        this.awayTeamName = awayTeamName;
     }
 
-    public int getHomeTeamId() {
-        return homeTeamId;
+    public String getHomeTeamName() {
+        return homeTeamName;
     }
 
-    public void setHomeTeamId(int homeTeamId) {
-        this.homeTeamId = homeTeamId;
+    public void setHomeTeamId(String homeTeamName) {
+        this.homeTeamName = homeTeamName;
     }
 
     public LocalTime getTime() {
@@ -77,8 +77,8 @@ public class MatchSchedule {
                 "matchId=" + matchId +
                 ", date=" + date +
                 ", time=" + time +
-                ", homeTeamId=" + homeTeamId +
-                ", awayTeamId=" + awayTeamId +
+                ", homeTeamId=" + homeTeamName +
+                ", awayTeamId=" + awayTeamName +
                 ", location='" + location + '\'' +
                 '}';
     }
