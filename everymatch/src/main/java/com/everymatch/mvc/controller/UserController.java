@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,7 +67,7 @@ public class UserController {
 		if(userService.loginUser(userId, password)) {
 			result.put("message", "로그인 성공");
 			result.put("access-token", jwtUtil.createToken("userId", userId));
-			result.put("nickname", userService.getUserDetails(userId).getNickname())
+			result.put("nickname", userService.getUserDetails(userId).getNickname());
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		else

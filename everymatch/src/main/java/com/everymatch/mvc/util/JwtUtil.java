@@ -8,8 +8,8 @@ import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Component
@@ -23,19 +23,18 @@ public class JwtUtil {
 		Date exp = new Date(now.getTime() + 1000 * 60 * 60); // 1시간
 
 		return Jwts.builder()
-				.setExpiration(exp) // 만료 시간
+				.expiration(exp) // 만료 시간
 				.claim(claimKey, data) // 사용자 정의 클레임 추가
-				.signWith(secretKey, SignatureAlgorithm.HS256) // 서명 알고리즘 설정
+				.signWith(secretKey) // 서명
 				.compact();
 	}
 
 	public Claims validateClaims(String token) {
 		try {
-			return Jwts.parserBuilder()
-					.setSigningKey(secretKey)
+			return Jwts.parser()
+					.verifyWith(secretKey)
 					.build()
-					.parseClaimsJws(token)
-					.getBody();
+					.parseSignedClaims(token).getPayload();
 		} catch (Exception e) {
 			throw new IllegalArgumentException("유효하지 않은 JWT 토큰입니다.", e);
 		}
