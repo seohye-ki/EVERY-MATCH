@@ -41,6 +41,7 @@ const login = async () => {
 
       // JWT 토큰 저장
       sessionStorage.setItem("Authorization", response.data["access-token"]);
+	  sessionStorage.setItem("nickname", response.data["nickname"]);
 
       // 메인 페이지로 이동
       router.push("/main");
@@ -67,15 +68,13 @@ const login = async () => {
 		<img src="/src/assets/EVERYMATCH.png" alt="logo" class="logo" />
   
 		<!-- Login Form -->
-		<div class="input-section">
-		  <input v-model="id" type="text" placeholder="아이디를 입력하세요" />
-		  <input
-			v-model="pw"
-			type="password"
-			placeholder="비밀번호를 입력하세요"
-		  />
-		</div>
-		<button @click="login">로그인</button>
+		<form @submit.prevent="login">
+		  <div class="input-section">
+		    <input v-model="id" type="text" placeholder="아이디를 입력하세요" />
+		    <input v-model="pw" type="password" placeholder="비밀번호를 입력하세요"/>
+		  </div>
+		  <button @click="login" type="submit">로그인</button>
+		</form>
   
 		<!-- Links -->
 		<div class="links">

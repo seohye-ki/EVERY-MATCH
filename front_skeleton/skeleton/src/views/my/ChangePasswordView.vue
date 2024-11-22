@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue'
 import axios from 'axios';
 import { errorMessages } from 'vue/compiler-sfc';
+import showAlert from '@/utils/swal'
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api'
@@ -33,21 +34,26 @@ const rightPW = async () => {
   console.log(newPassword2.value)
   try{
     const response = await api.put('/user/update-password' ,form )
-    useRout.push('/main')
+    await showAlert('변경 완료', '비밀번호가 변경되었습니다.', 'success')
+	useRout.push('/main')
   } catch (error) {
     console.log(error.status)
+	oldPassword.value = ''
+	newPassword.value = ''
+	newPassword2.value = ''
     if (error.status === 401) {
-        console.log('인증 오류!')
+        await showAlert('변경 실패', '비밀번호가 변경에 실패하였습니다 다시 시도해주세요.', 'error')
     } else if (error.status === 400) {
-      console.log('비밀번호 인증을 다시 해주세요')
+		await showAlert('변경 실패', '비밀번호가 일치하지 않습니다. 다시 시도해주세요.', 'error')
     } else {
-      errorMessages.value = '서버 연결 실패'
+		console.error("서버 오류 발생:", error)
+		await showAlert('서버 오류', '서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.', 'error')
     }
   }  
 };
 
 const cancel = (event) => {
-  useRout.push('/info');
+  useRout.push('./info');
   event.preventDefault();
 };
 </script>
@@ -59,29 +65,31 @@ const cancel = (event) => {
 		<!-- 로고 -->
 		<img src="/src/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
 		
-		<!-- Old Password 입력 -->
-		<div class="form-group">
-		  <label for="old-password">Old Password</label>
-		  <input id="old-password" v-model="oldPassword" type="password" placeholder="비밀번호를 입력하세요" />
-		</div>
-  
-		<!-- New Password 입력 -->
-		<div class="form-group">
-		  <label for="new-password">New Password</label>
-		  <input id="new-password" v-model="newPassword" type="password" placeholder="새로운 비밀번호를 입력하세요" />
-		</div>
-  
-		<!-- New Password 확인 -->
-		<div class="form-group">
-		  <label for="confirm-password">New Password Confirmation</label>
-		  <input id="confirm-password" v-model="newPassword2" type="password" placeholder="새로운 비밀번호를 다시 입력하세요" />
-		</div>
-  
-		<!-- 버튼 그룹 -->
-		<div class="button-group">
-		  <button class="cancel-button" @click="cancel">취소</button>
-		  <button class="submit-button" @click="rightPW">변경</button>
-		</div>
+		<form @submit.prevent="rightPW">
+			<!-- Old Password 입력 -->
+			<div class="form-group">
+			  <label for="old-password">Old Password</label>
+			  <input id="old-password" v-model="oldPassword" type="password" placeholder="비밀번호를 입력하세요" />
+			</div>
+	
+			<!-- New Password 입력 -->
+			<div class="form-group">
+			  <label for="new-password">New Password</label>
+			  <input id="new-password" v-model="newPassword" type="password" placeholder="새로운 비밀번호를 입력하세요" />
+			</div>
+	
+			<!-- New Password 확인 -->
+			<div class="form-group">
+			  <label for="confirm-password">New Password Confirmation</label>
+			  <input id="confirm-password" v-model="newPassword2" type="password" placeholder="새로운 비밀번호를 다시 입력하세요" />
+			</div>
+	
+			<!-- 버튼 그룹 -->
+			<div class="button-group">
+			  <button class="cancel-button" @click="cancel" type="button">취소</button>
+			  <button class="submit-button" type="submit">변경</button>
+			</div>
+		</form>
 	  </div>
 	</div>
 </template>

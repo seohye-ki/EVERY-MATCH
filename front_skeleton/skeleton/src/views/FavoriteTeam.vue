@@ -4,6 +4,7 @@ import favorite from '@/components/Favorite.vue'
 import { ref, onBeforeMount, } from 'vue';
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import showAlert from "@/utils/swal";
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',  
@@ -64,10 +65,10 @@ const storage = async () => {
     try {
     const response = await api.put('/favorite', Ids)
     if (response.status === 200) {
-        alert("완료")
-        useRout.push("main")
+        await showAlert("저장완료", null, "success");
+		useRout.push("main")
     } else {
-        alert("오류발생 ㅠㅠ 다시 시도해주세요")
+		await showAlert("오류발생", "다시 시도해주세요", "error");
     }
 
     } catch (error) {
@@ -136,7 +137,7 @@ const cancel = () => {
 			  @click="plusTeam(team.teamId)"
 			  :class="{ selected: favoriteTeams.some(fav => fav.teamId === team.teamId) }"
 			>
-			  <img :src="`/src/assets/teams/${team.teamLogo}`" :alt="team.teamName" />
+			  <img :src="`/src/assets/imgs/${team.teamLogo}`" :alt="team.teamName" />
 			</div>
 		  </div>
 		</div>

@@ -33,8 +33,9 @@ const validate = async () => {
       router.push("./info")
     }
   } catch (error) {
+	  password.value = ''
     if (error.response && error.response.status === 403) {
-      await showAlert('인증 실패', '비밀번호가 일치하지 않습니다. 다시 시도해주세요.', 'error')
+		await showAlert('인증 실패', '비밀번호가 일치하지 않습니다. 다시 시도해주세요.', 'error')
     } else {
       console.error("서버 오류 발생:", error)
       await showAlert('서버 오류', '서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.', 'error')
@@ -53,18 +54,20 @@ const cancel = () => {
 	  <div class="auth-form">
 		<!-- 로고 -->
 	    <img src="/src/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
-		<label for="password" class="label">Password</label>
-		<input
-		  id="password"
-		  v-model="password"
-		  type="password"
-		  placeholder="비밀번호를 입력하세요"
-		  class="input"
-		/>
-		<div class="button-group">
-		  <button @click="cancel" class="cancel-button">취소</button>
-		  <button @click="validate" class="confirm-button">확인</button>
-		</div>
+		<form @submit.prevent="validate">
+			<label for="password" class="label">Password</label>
+			<input
+			  id="password"
+			  v-model="password"
+			  type="password"
+			  placeholder="비밀번호를 입력하세요"
+			  class="input"
+			/>
+			<div class="button-group">
+			  <button @click="cancel" type="button" class="cancel-button">취소</button>
+			  <button type="submit" class="confirm-button">확인</button>
+			</div>
+		</form>
 	  </div>
 	</div>
 </template>
