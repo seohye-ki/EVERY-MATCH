@@ -92,7 +92,8 @@ public class UserController {
 	public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String token,
 			@RequestParam String nickname, @RequestParam String email) {
 		String userId = extractUserIdFromToken(token);
-		if (nickname == null || email == null || userService.isDuplicateEmail(email))
+		String userEmail = userService.getUserDetails(userId).getEmail();
+		if (nickname == null || email == null || ( !userEmail.equals(email) && userService.isDuplicateEmail(email)))
 			return new ResponseEntity<>("변경불가", HttpStatus.BAD_REQUEST);
 		userService.updateUser(userId, nickname, email);
 		return new ResponseEntity<>("업데이트 성공", HttpStatus.OK);
@@ -114,8 +115,12 @@ public class UserController {
 	@PutMapping("/update-password")
 	public ResponseEntity<String> updatePassword(@RequestHeader("Authorization") String token,
 			@RequestParam String oldPassword,
-			@RequestParam String newPassword) {
+			@RequestParam String newPassword,
+			@RequestParam String newPassword2) {
 		String userId = extractUserIdFromToken(token);
+		if (!newPassword.equals(newPassword2)) {
+			return new ResponseEntity<>("바꾼 비밀번호가 동일하지 않습니다.", HttpStatus.UNAUTHORIZED);
+		}
 		if (userService.updatePassword(userId, oldPassword, newPassword))
 			return new ResponseEntity<>("비밀번호 변경 성공", HttpStatus.OK);
 		return new ResponseEntity<>("비밀번호 변경 실패", HttpStatus.BAD_REQUEST);
