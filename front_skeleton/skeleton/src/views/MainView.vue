@@ -155,8 +155,10 @@ const logout = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
   background-color: #f9f9f9;
   min-height: 100vh;
+  max-width: 100%;
   box-sizing: border-box;
 }
 
@@ -164,9 +166,6 @@ const logout = () => {
 .header {
   width: 95%;
   padding: 10px 0px 0px 0px;
-  display: flex;
-  background-color: transparent; /* 배경 투명 */
-  margin-bottom: 20px; /* 아래 여백 추가 */
 }
 
 .logo {
@@ -176,11 +175,12 @@ const logout = () => {
 /* 콘텐츠 컨테이너 */
 .content-container {
   display: grid;
-  grid-template-columns: 250px auto 300px; /* 왼쪽 메뉴, 중앙 달력, 오른쪽 리스트 */
+  grid-template-columns: 130px auto 250px; /* 왼쪽 메뉴, 중앙 달력, 오른쪽 리스트 */
   gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-  height: calc(100vh - 120px); /* 헤더 높이를 뺀 나머지 높이 */
+  width: 95%;
+  /* max-width: 1200px; */
+  margin-top: 30px;
+  height: calc(100vh - 200px); /* 헤더 높이를 뺀 나머지 높이 */
   box-sizing: border-box;
 }
 
@@ -192,6 +192,7 @@ const logout = () => {
   flex-direction: column;
   align-items: center;
   border-radius: 12px;
+  justify-content: flex-end;
 }
 
 .menu-item {
