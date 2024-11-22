@@ -106,31 +106,169 @@ const logout = () => {
 }
 
 </script>
-
 <template>
-<main>
-    <div>
-        <img src="@/assets/SMALL.png"/>
-        <div>
-            <a href="myPage/pw">마이페이지</a>
-        </div>
-        <div>
-          <a href="favorite">Favorite Team</a> 
-        </div>
-        <div>
-          <a href="" @click="logout">Log Out</a>
-        </div>
-    </div>
-    <FullCalendar v-if="can" :options="calendarOptions" />
-    <div>
-        <Match v-if="can" v-for="match in matchs" :key="match.matchId" :match="match"/>            
-    </div>
-</main>
+	<div class="main-layout">
+	  <!-- 헤더 -->
+	  <header class="header">
+		<img src="@/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
+	  </header>
+  
+	  <main class="content-container">
+		<!-- 왼쪽 사이드 메뉴 -->
+		<div class="left-menu">
+		  <div class="menu-item">
+			<img src="@/assets/small.png" alt="My Page Icon" class="icon" />
+			<a href="myPage/pw">마이페이지</a>
+		  </div>
+		  <div class="menu-item">
+			<img src="@/assets/small.png" alt="Favorite Team Icon" class="icon" />
+			<a href="favorite">Favorite Team</a>
+		  </div>
+		  <div class="menu-item" @click="logout">
+			<img src="@/assets/small.png" alt="Logout Icon" class="icon" />
+			<a href="#">Log Out</a>
+		  </div>
+		</div>
+  
+		<!-- 중앙 달력 -->
+		<div class="calendar-section">
+		  <FullCalendar v-if="can" :options="calendarOptions" />
+		</div>
+  
+		<!-- 오른쪽 경기 리스트 -->
+		<div class="match-list-section">
+		  <h2 class="match-list-title">경기 리스트</h2>
+		  <div v-if="matchs && matchs.length > 0" class="match-item" v-for="match in matchs" :key="match.matchId">
+			<div class="match-time">{{ match.time.slice(0, 5) }}</div>
+			<div class="match-info">{{ match.homeTeamId }} vs {{ match.awayTeamId }}</div>
+			<div class="match-location">대구 삼성 라이온즈 파크</div>
+		  </div>
+		  <div v-else class="no-match">선택한 날짜에 경기가 없습니다.</div>
+		</div>
+	  </main>
+	</div>
 </template>
-
+  
 <style scoped>
-main {
-    display: flex;
-    flex-direction: row;
+/* 전체 컨테이너 */
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.header {
+  width: 95%;
+  padding: 10px 0px 0px 0px;
+  display: flex;
+  background-color: transparent; /* 배경 투명 */
+  margin-bottom: 20px; /* 아래 여백 추가 */
+}
+
+.logo {
+  width: 230px;
+}
+
+/* 콘텐츠 컨테이너 */
+.content-container {
+  display: grid;
+  grid-template-columns: 250px auto 300px; /* 왼쪽 메뉴, 중앙 달력, 오른쪽 리스트 */
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  height: calc(100vh - 120px); /* 헤더 높이를 뺀 나머지 높이 */
+  box-sizing: border-box;
+}
+
+/* 왼쪽 메뉴 */
+.left-menu {
+  background-color: #de7268;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.menu-item img {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.menu-item a {
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.menu-item:hover a {
+  text-decoration: underline;
+}
+
+/* 중앙 달력 */
+.calendar-section {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 오른쪽 경기 리스트 */
+.match-list-section {
+  background-color: #de7268;
+  border-radius: 12px;
+  padding: 20px;
+  overflow-y: auto;
+  color: #fff;
+}
+
+.match-list-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.match-item {
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.match-item .match-time {
+  font-weight: bold;
+  font-size: 16px;
+  color: #de7268;
+  margin-bottom: 5px;
+}
+
+.match-item .match-info {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.match-item .match-location {
+  font-size: 12px;
+  color: #666;
+}
+
+.no-match {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
 }
 </style>

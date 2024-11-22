@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import showAlert from "@/utils/swal";
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
@@ -46,12 +47,12 @@ const changeInfo = async () => {
     });
 
     if (response.status === 200) {
-      alert('정보가 성공적으로 수정되었습니다.');
+	  await showAlert('정보가 성공적으로 수정되었습니다.');
       router.push('/main');
     }
   } catch (error) {
     console.error('Failed to update user data:', error);
-    alert('정보 수정 중 문제가 발생했습니다.');
+    await showAlert('정보 수정 중 문제가 발생했습니다.');
   }
 };
 
@@ -70,175 +71,233 @@ const deleteAccount = async () => {
   if (confirm('정말로 회원 탈퇴를 진행하시겠습니까?')) {
     try {
       await api.delete('/user/delete');
-      alert('회원 탈퇴가 완료되었습니다.');
+      await showAlert('회원 탈퇴가 완료되었습니다.');
       router.push('/login');
     } catch (error) {
       console.error('Failed to delete user:', error);
-      alert('회원 탈퇴 중 문제가 발생했습니다.');
+      await showAlert('회원 탈퇴 중 문제가 발생했습니다.');
     }
   }
 };
 </script>
-
 <template>
-  <div class="container vh-100 d-flex align-items-center justify-content-center" style="max-width: 100%; height: 100vh; margin: 0 auto; padding: 40px;">
-    <div class="position-absolute top-0 start-1 p-3" style="width: 350px;">
-      <img src="/src/assets/EVERYMATCH.png" alt="Logo" style="width: 100%; height: auto;">
-    </div>
-	<div class="row shadow-lg rounded w-100" style="height: 90%; overflow: auto;">
-      <!-- 사이드바 -->
-      <div class="col-12 col-md-4 bg-danger text-white d-flex flex-column align-items-center py-5 justify-content-between" style="height: auto;">
-        <div class="d-flex flex-column align-items-center">
-          <img
-            src="/src/assets/user.png"
-            alt="User Avatar"
-            class="rounded-circle"
-            style="width: 150px; height: 150px;"
-          />
-        </div>
-        <button
-          class="btn btn-light text-danger fw-bold px-4 mt-5"
-          @click="deleteAccount"
-        >
-          회원탈퇴
-        </button>
-      </div>
-      <!-- 메인 카드 -->
-      <div class="col-12 col-md-8 bg-white p-5" style="height: auto;">
-        <h1 class="mb-4 fw-bold">마이페이지</h1>
-        <form @submit.prevent="changeInfo">
-          <!-- ID -->
-          <div class="mb-4">
-            <label for="id" class="form-label">ID</label>
-            <input
-              type="text"
-              id="id"
-              class="form-control"
-              v-model="userId"
-              readonly
-            />
-          </div>
+	<div class="mypage-container">
+	  <!-- 로고 -->
+	  <header class="header">
+		<img src="/src/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
+	  </header>
   
-          <!-- Nickname -->
-          <div class="mb-4">
-            <label for="nickname" class="form-label">Nickname</label>
-            <input
-              type="text"
-              id="nickname"
-              class="form-control"
-              v-model="nickname"
-            />
-          </div>
+	  <!-- 마이페이지 컨텐츠 -->
+	  <div class="content">
+		<!-- 왼쪽 섹션 -->
+		<div class="left-section">
+		  <div class="avatar">
+			<img src="/src/assets/user.png" alt="User Avatar" />
+		  </div>
+		  <button class="delete-account-button" @click="deleteAccount">회원탈퇴</button>
+		</div>
   
-          <!-- Email -->
-          <div class="mb-4">
-            <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              id="email"
-              class="form-control"
-              v-model="email"
-            />
-          </div>
+		<!-- 오른쪽 섹션 -->
+		<div class="right-section">
+		  <h2 class="title">마이페이지</h2>
   
-          <!-- 비밀번호 변경 버튼 -->
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-lg mb-3 change-pw-btn"
-            @click="changePW"
-          >
-            비밀번호 변경
-          </button>
+		  <!-- 사용자 정보 -->
+		  <div class="form-group">
+			<label for="userId">ID</label>
+			<input id="userId" type="text" :value="userId" readonly />
+		  </div>
+		  <div class="form-group">
+			<label for="nickname">Nickname</label>
+			<input id="nickname" v-model="nickname" type="text" />
+		  </div>
+		  <div class="form-group">
+			<label for="email">Email</label>
+			<input id="email" v-model="email" type="email" />
+		  </div>
+		  <button class="change-password-button" @click="changePW">
+			비밀번호 변경
+		  </button>
   
-          <!-- 수정 및 취소 버튼 -->
-          <div class="d-flex justify-content-end">
-            <button type="button" class="btn" @click="cancel">
-              X 취소
-            </button>
-            <button type="submit" class="btn btn-danger">정보 수정</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+		  <!-- 버튼 그룹 -->
+		  <div class="button-group">
+			<button class="cancel-button" @click="cancel">X 닫기</button>
+			<button class="update-button" @click="changeInfo">정보 수정</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
 </template>
 
 <style scoped>
-.container {
-  background-color: #ffffff;
+/* 부모 컨테이너 */
+.mypage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
-  height: 100vh;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.bg-danger {
-  background-color: #D86B61 !important; /* 사이드바 배경색 */
+/* 헤더 섹션 */
+.header {
+  width: 95%;
+  padding: 10px 0px 0px 0px;
 }
 
-.card {
-  border: none;
+.logo {
+  width: 230px;
 }
 
-button {
+/* 콘텐츠 섹션 */
+.content {
+  display: flex;
+  width: 95%;
+  height: calc(100vh - 200px);
+  margin-top: 30px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* 왼쪽 섹션 */
+.left-section {
+  background-color: #de7268;
+  width: 250px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+
+.delete-account-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #da4537;
+  font-size: 14px;
   font-weight: bold;
-}
-
-button.btn-danger {
-  background-color: #D86B61;
   border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-button.btn-danger:hover {
-  background-color: #BA584F; /* 호버 시 색상 변경 */
+.delete-account-button:hover {
+  background-color: #f0f0f0;
+  color: #c44130;
 }
 
-button.btn-outline-secondary {
-  border-color: #dcdcdc;
-  color: #333;
-  font-size: 1rem; /* 텍스트 크기 조정 */
-  padding: 10px 20px; /* 버튼 크기 */
-  border-radius: 5px; /* 둥근 버튼 */
+/* 오른쪽 섹션 */
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  justify-content: space-between;
 }
 
-button.btn-outline-secondary:hover {
-  background-color: #e0e0e0;
-  color: #000;
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
 }
 
-h1 {
-  font-size: 1.8rem;
+/* 폼 그룹 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 input {
-  border-radius: 5px;
-  padding: 10px;
+  width: 80%;
+  max-width: 600px;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
 }
 
-input:focus {
-  border-color: #D86B61;
-  box-shadow: 0 0 5px rgba(216, 107, 97, 0.5);
+input#userId {
+  background-color: #f0f0f0; 
+  border: 1px solid #ddd; 
+  color: #888; 
+  cursor: not-allowed; 
 }
 
-.col-md-4 {
+/* 버튼 그룹 */
+.button-group {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: auto;
+  align-self: flex-end;
 }
 
-button.change-pw-btn {
-  width: 50%;
-  height: 48px; /* 높이를 그림과 동일하게 설정 */
-  font-size: 1rem;
+.cancel-button {
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  color: #555;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.d-flex.justify-content-end button {
-  margin-left: 10px; /* 버튼 간 간격 */
+.cancel-button:hover {
+  background-color: #e0e0e0;
 }
 
-button.btn-outline-secondary:hover {
-  background-color: #dcdcdc; /* 연한 회색 배경 */
-  color: #555; /* 어두운 회색 텍스트 */
+.update-button {
+  padding: 10px 20px;
+  background-color: #de7268;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.update-button:hover {
+  background-color: #cd685e;
+}
 
+/* 비밀번호 변경 버튼 */
+.change-password-button {
+  padding: 12px 20px;
+  color: #555;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 120px;
+  transition: background-color 0.3s ease;
+}
+
+.change-password-button:hover {
+  background-color: #e0e0e0;
+}
 </style>

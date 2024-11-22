@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/counter'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from "axios"
 import showAlert from '@/utils/swal';
 
@@ -58,66 +58,209 @@ const nextStep = async (event) => {
     router.push("/regist/fin")
   }
 }
+
+const progressWidth = ref(0)
+
+onMounted(() => {
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 5; // 증가 속도
+    progressWidth.value = progress;
+
+    if (progress >= 100) {
+      clearInterval(interval); // 25%에 도달하면 애니메이션 종료
+    }
+  }, 100); // 100ms마다 업데이트
+});
 </script>
 
 <template>
-  <div class="container vh-100 d-flex justify-content-center align-items-center">
-    <div class="card shadow-sm p-5 email-card">
-      <div class="d-flex align-items-center justify-content-between">
-
-        <div>
-          <img src="/src/assets/SMALL.png" alt="Icon" class="mb-3 icon" />
-          <h4 class="fw-normal">이메일 입력</h4>
-        </div>
-
-        <div class="form-section">
-          <form @submit.prevent="nextStep">
-            <div class="mb-3">
-              <label for="email" class="form-label fw-bold">
-                <span class="me-2">🔔</span>경기 시작 1시간 전에 알림을 보내드릴게요
-              </label>
-              <input
-                id="email"
-                type="email"
-                v-model="email"
-                class="form-control"
-                placeholder="이메일을 입력하세요"
-                required
-                @input="isDuplicateEmail = false"
-              />
-            </div>
-            <div class="d-flex justify-content-between mt-4">
-              <button type="button" @click="prevStep" class="btn btn-outline-secondary prev-btn">
-                &lt; 이전
-              </button>
-              <button type="submit" class="btn btn-danger next-btn">
-                다음
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="container">
+	  <!-- Progress Bar -->
+	  <div class="progress-container">
+		<div class="progress-text">4 / 4</div>
+		<div class="progress-bar">
+		  <div class="progress-fill" :style="{ width: progressWidth + '%' }"></div>
+		</div>
+	  </div>
+  
+	  <!-- Card: Form Content -->
+	  <div class="card">
+		<div class="form-content">
+		  <!-- Left Section: Icon and Title -->
+		  <div class="left-section">
+			<img src="@/assets/small.png" alt="icon" class="icon" />
+			<h2>이메일 입력</h2>
+		  </div>
+  
+		  <!-- Right Section: Input and Buttons -->
+		  <div class="right-section">
+			<div class="input-section">
+			  <label for="email">
+				<span class="alert-icon">🔔</span> 경기 시작 1시간 전에 알림을 보내드릴게요
+			  </label>
+			  <input
+				id="email"
+				v-model="email"
+				type="email"
+				placeholder="이메일을 입력하세요"
+			  />
+			</div>
+  
+			<!-- Navigation Buttons -->
+			<div class="button-group">
+			  <button class="prev-button" @click="prevStep">&lt; 이전</button>
+			  <button class="next-button" @click="nextStep">다음</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>
 </template>
 
 <style scoped>
-.email-card {
-  max-width: 900px;
+/* 부모 컨테이너 */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Progress Bar 컨테이너 */
+.progress-container {
   width: 100%;
-  border-radius: 15px;
+  max-width: 800px;
+  margin-bottom: 30px;
+}
+
+.progress-text {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #666;
+  text-align: left;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 100%; /* 4 / 4 진행 */
+  height: 100%;
+  background-color: #ec493a;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Card 스타일 */
+.card {
+  background-color: #ffffff;
+  padding: 50px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Form Content 스타일 */
+.form-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Left Section 스타일 */
+.left-section {
+  flex: 1;
+  text-align: left;
 }
 
 .icon {
   width: 40px;
-  height: 40px;
+  margin-bottom: 10px;
 }
 
-.form-section {
-  width: 40%;
+h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
-.prev-btn, .next-btn {
-  border-radius: 10px;
+/* Right Section 스타일 */
+.right-section {
+  flex: 1;
+}
+
+.input-section {
+  margin-bottom: 10px;
+}
+
+.input-section label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.alert-icon {
+  margin-right: 8px;
+  font-size: 16px;
+  color: #ec493a;
+}
+
+.input-section input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.prev-button,
+.next-button {
+  padding: 12px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.prev-button {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.prev-button:hover {
+  background-color: #e0e0e0;
+}
+
+.next-button {
+  background-color: #da4537;
+  color: #fff;
+}
+
+.next-button:hover {
+  background-color: #ec493a;
 }
 </style>

@@ -8,7 +8,7 @@
 .custom-swal-title {
 	font-size: 24px;
 	font-weight: bold;
-	color: #d32f2f;
+	color: #da4537;
 }
 
 .custom-swal-text {
@@ -17,7 +17,7 @@
 }
 
 .swal2-confirm {
-	background-color: #d32f2f !important;
+	background-color: #da4537 !important;
 	color: white !important;
 	border-radius: 5px;
 	padding: 10px 20px;
@@ -25,5 +25,5 @@
 }
 
 .swal2-confirm:hover {
-	background-color: #b71c1c !important;
+	background-color: #ec493a !important;
 }
