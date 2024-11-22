@@ -9,9 +9,10 @@ const match = props.match
 </script>
 
 <template>
-    <div>
-        <h2>{{ match.time }}  {{ match.homeTeamName }} vs {{ match.awayTeamName }}</h2>
-        <h2>{{ match.location }}</h2>
+    <div class="match-item">
+        <div class="match-time">{{ match.time.slice(0, 5) }}</div>
+        <div class="match-info">{{ match.homeTeamName }} vs {{ match.awayTeamName }}</div>
+        <div class="match-location">{{ match.location}}</div>
     </div>
 </template>
 

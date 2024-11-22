@@ -34,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="container">
+	<div class="container-fluid">
 		<!-- Progress Bar -->
 	  <div class="progress-container">
 		<div class="progress-text">1 / 4</div>
@@ -71,7 +71,7 @@ onMounted(() => {
 
 <style scoped>
 /* 부모 컨테이너: 중앙 정렬 */
-.container {
+.container-fluid {
   display: flex;
   flex-direction: column;
   justify-content: center;

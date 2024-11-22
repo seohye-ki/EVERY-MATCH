@@ -102,7 +102,11 @@ router.beforeEach((to, from, next) => {
   const excludedRoutes = ['Login', 'FindPw'];
   if (!token) {
     if (excludedRoutes.includes(to.name) || to.name.startsWith('Regist')) {
-      next(); // 제외된 페이지는 가드하지 않고 그대로 진행
+      if (to.name === 'Regist') {
+        next({ name: 'Regist_nick'})
+      } else {
+        next(); // 제외된 페이지는 가드하지 않고 그대로 진행
+      }
     } else {
       next({ name: 'Login' }); // 토큰이 없으면 로그인 페이지로 리다이렉트  
     }
