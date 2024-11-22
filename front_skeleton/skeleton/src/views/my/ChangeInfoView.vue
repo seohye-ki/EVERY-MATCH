@@ -46,6 +46,7 @@ const changeInfo = async () => {
     const response = await api.put('/user', form);
 
     if (response.status === 200) {
+	  sessionStorage.setItem("nickname", nickname.value);
 	  await showAlert('정보가 성공적으로 수정되었습니다.');
       useRout.push('/main');
     }
@@ -91,7 +92,7 @@ const deleteAccount = async () => {
 		<!-- 왼쪽 섹션 -->
 		<div class="left-section">
 		  <div class="avatar">
-			<img src="/src/assets/user.png" alt="User Avatar" />
+			<img src="/src/assets/icons/user.png" alt="User Avatar" />
 		  </div>
 		  <button class="delete-account-button" @click="deleteAccount">회원탈퇴</button>
 		</div>

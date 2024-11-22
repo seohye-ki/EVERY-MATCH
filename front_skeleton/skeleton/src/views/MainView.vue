@@ -35,6 +35,7 @@ const events = ref([
 
 const can = ref(false)
 const selectedDate=ref()
+const nickname=sessionStorage.getItem('nickname')
 const matchs=ref()
 const useRou=useRouter()
 
@@ -115,23 +116,36 @@ const logout = () => {
   
 	  <main class="content-container">
 		<!-- 왼쪽 사이드 메뉴 -->
-		<div class="left-menu">
-		  <div class="menu-item">
-			<img src="@/assets/User.png" alt="My Page Icon" class="icon" />
-			<a href="myPage/pw">My Page</a>
-		  </div>
-		  <div class="menu-item">
-			<img src="@/assets/Favorite.png" alt="Favorite Team Icon" class="icon" />
-			<a href="favorite">Favorite Team</a>
-		  </div>
-		  <div class="menu-item" @click="logout">
-			<img src="@/assets/Logout.png" alt="Logout Icon" class="icon" />
-			<a href="#">Log Out</a>
-		  </div>
+		<div class="left-section">
+			<div class="user-img">
+			  <img src="@/assets/icons/user.png" alt="userImg" class="user" />
+			</div>
+			<div class="left-menu">
+			  <div class="menu-item">
+				<a href="myPage/pw">
+				  <img src="@/assets/icons/settings.png" alt="My Page Icon" class="icon" />
+				  My Page
+				</a>
+			  </div>
+			  <div class="menu-item">
+				<a href="favorite">
+				<img src="@/assets/icons/like.png" alt="Favorite Team Icon" class="icon" />
+				  Favorite Team
+			    </a>
+			  </div>
+			  <div class="menu-item" @click="logout">
+				<a href="#">
+				  <img src="@/assets/icons/logout.png" alt="Logout Icon" class="icon" />
+				  Log Out
+				</a>
+			  </div>
+			</div>
+
 		</div>
   
 		<!-- 중앙 달력 -->
 		<div class="calendar-section">
+		  <p><span>{{ nickname }}</span>님! 오늘도 멋진 경기들이 기다리고 있어요! 🔥</p>
 		  <FullCalendar v-if="can" :options="calendarOptions" />
 		</div>
   
@@ -181,30 +195,44 @@ const logout = () => {
 }
 
 /* 왼쪽 메뉴 */
-.left-menu {
+.left-section {
   background-color: #de7268;
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 12px;
+  justify-content: space-between;
+}
+
+.user {
+  margin-top: 30px;
+}
+
+.left-menu {
+  display: flex;
+  flex-direction: column;
   justify-content: flex-end;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
+  margin-bottom: 25px;
   color: #fff;
   text-decoration: none;
 }
 
 .menu-item img {
-  width: 20px;
-  margin-right: 10px;
+  width: 30px;
+  margin-bottom: 3px;
 }
 
 .menu-item a {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   color: #fff;
   font-size: 14px;
   text-decoration: none;
@@ -218,8 +246,20 @@ const logout = () => {
 .calendar-section {
   background-color: #ffffff;
   border-radius: 12px;
-  padding: 20px;
+  padding: 40px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-section span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.calendar-section p {
+  border-radius: 12px;
+  border: #de7268 solid 2px;
+  padding: 15px;
+  margin-bottom: 30px;
 }
 
 /* 오른쪽 경기 리스트 */
@@ -234,7 +274,8 @@ const logout = () => {
 .match-list-title {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 .match-item {
