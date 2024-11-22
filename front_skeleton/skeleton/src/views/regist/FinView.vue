@@ -8,7 +8,7 @@ const goToLogin = () => {
 };
 </script>
 <template>
-	<div class="container">
+	<div class="container-fluid">
 	  <div class="card">
 		<!-- 로고 -->
 		<div class="logo-container">
@@ -30,7 +30,7 @@ const goToLogin = () => {
 
 <style scoped>
 /* 부모 컨테이너: 중앙 정렬 */
-.container {
+.container-fluid {
   display: flex;
   justify-content: center;
   align-items: center;

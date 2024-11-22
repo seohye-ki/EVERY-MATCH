@@ -117,15 +117,15 @@ const logout = () => {
 		<!-- 왼쪽 사이드 메뉴 -->
 		<div class="left-menu">
 		  <div class="menu-item">
-			<img src="@/assets/small.png" alt="My Page Icon" class="icon" />
-			<a href="myPage/pw">마이페이지</a>
+			<img src="@/assets/User.png" alt="My Page Icon" class="icon" />
+			<a href="myPage/pw">My Page</a>
 		  </div>
 		  <div class="menu-item">
-			<img src="@/assets/small.png" alt="Favorite Team Icon" class="icon" />
+			<img src="@/assets/Favorite.png" alt="Favorite Team Icon" class="icon" />
 			<a href="favorite">Favorite Team</a>
 		  </div>
 		  <div class="menu-item" @click="logout">
-			<img src="@/assets/small.png" alt="Logout Icon" class="icon" />
+			<img src="@/assets/Logout.png" alt="Logout Icon" class="icon" />
 			<a href="#">Log Out</a>
 		  </div>
 		</div>
@@ -138,18 +138,14 @@ const logout = () => {
 		<!-- 오른쪽 경기 리스트 -->
 		<div class="match-list-section">
 		  <h2 class="match-list-title">경기 리스트</h2>
-		  <div v-if="matchs && matchs.length > 0" class="match-item" v-for="match in matchs" :key="match.matchId">
-			<div class="match-time">{{ match.time.slice(0, 5) }}</div>
-			<div class="match-info">{{ match.homeTeamId }} vs {{ match.awayTeamId }}</div>
-			<div class="match-location">대구 삼성 라이온즈 파크</div>
-		  </div>
+      <Match v-if="matchs && matchs.length  > 0" v-for="match in matchs" :key="match.matchId" :match="match"/>
 		  <div v-else class="no-match">선택한 날짜에 경기가 없습니다.</div>
 		</div>
 	  </main>
 	</div>
 </template>
   
-<style scoped>
+<style>
 /* 전체 컨테이너 */
 .main-layout {
   display: flex;
@@ -271,5 +267,30 @@ const logout = () => {
   text-align: center;
   font-size: 14px;
   margin-top: 20px;
+}
+
+:root {
+  --fc-neutral-text-color: #808080;
+}
+.fc-daygrid-day-number {
+    text-decoration: none;
+    color: black;
+    font-weight: 800;
+}
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+    min-height: 0;
+}
+.fc .fc-daygrid-day-frame {
+    align-content: center;
+}
+.fc .fc-daygrid-day-top {
+    justify-content: center;
+}
+.fc .fc-col-header-cell-cushion {
+    text-decoration: none;
+    color: black;
+}
+.fc .fc-toolbar-title {
+    font-weight: 900;
 }
 </style>
