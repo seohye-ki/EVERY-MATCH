@@ -19,7 +19,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-const router = useRouter();
+const useRout = useRouter();
 
 const userId = ref('');
 const nickname = ref('');
@@ -40,15 +40,14 @@ onMounted(async () => {
 // 정보 수정
 const changeInfo = async () => {
   try {
-    const response = await api.put('/user/update', {
-      userId: userId.value,
-      nickname: nickname.value,
-      email: email.value,
-    });
+    const form = new FormData()
+    form.append('nickname', nickname.value)
+    form.append('email', email.value)
+    const response = await api.put('/user', form);
 
     if (response.status === 200) {
 	  await showAlert('정보가 성공적으로 수정되었습니다.');
-      router.push('/main');
+      useRout.push('/main');
     }
   } catch (error) {
     console.error('Failed to update user data:', error);
@@ -58,12 +57,12 @@ const changeInfo = async () => {
 
 // 비밀번호 변경
 const changePW = () => {
-  router.push('/changePW');
+  useRout.push('./changePW');
 };
 
 // 취소
 const cancel = () => {
-  router.push('/main');
+  useRout.push('/main');
 };
 
 // 회원 탈퇴
@@ -72,7 +71,7 @@ const deleteAccount = async () => {
     try {
       await api.delete('/user/delete');
       await showAlert('회원 탈퇴가 완료되었습니다.');
-      router.push('/login');
+      useRout.push('/login');
     } catch (error) {
       console.error('Failed to delete user:', error);
       await showAlert('회원 탈퇴 중 문제가 발생했습니다.');
@@ -108,7 +107,7 @@ const deleteAccount = async () => {
 		  </div>
 		  <div class="form-group">
 			<label for="nickname">Nickname</label>
-			<input id="nickname" v-model="nickname" type="text" />
+			<input id="nickname" :value="nickname" @input="(event) => (nickname = event.target.value)" type="text" />
 		  </div>
 		  <div class="form-group">
 			<label for="email">Email</label>

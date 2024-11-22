@@ -1,14 +1,53 @@
 <script setup>
 import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import axios from 'axios';
+import { errorMessages } from 'vue/compiler-sfc';
 
-const router = useRouter();
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api'
+})
 
-const rightPW = (pw) => {
-  router.push('/main');
+api.interceptors.request.use((config) => {
+    const token = sessionStorage.getItem('Authorization')
+    if (token) {
+      config.headers['Authorization'] = `${token}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
+
+const useRout = useRouter();
+const oldPassword = ref('')
+const newPassword = ref('')
+const newPassword2 = ref('')
+
+const rightPW = async () => {
+  const form = new FormData()
+  form.append('oldPassword',oldPassword.value)
+  form.append('newPassword',newPassword.value)
+  form.append('newPassword2',newPassword2.value)
+  console.log(newPassword.value)
+  console.log(newPassword2.value)
+  try{
+    const response = await api.put('/user/update-password' ,form )
+    useRout.push('/main')
+  } catch (error) {
+    console.log(error.status)
+    if (error.status === 401) {
+        console.log('인증 오류!')
+    } else if (error.status === 400) {
+      console.log('비밀번호 인증을 다시 해주세요')
+    } else {
+      errorMessages.value = '서버 연결 실패'
+    }
+  }  
 };
 
 const cancel = (event) => {
-  router.push('/info');
+  useRout.push('/info');
   event.preventDefault();
 };
 </script>
@@ -23,19 +62,19 @@ const cancel = (event) => {
 		<!-- Old Password 입력 -->
 		<div class="form-group">
 		  <label for="old-password">Old Password</label>
-		  <input id="old-password" type="password" placeholder="비밀번호를 입력하세요" />
+		  <input id="old-password" v-model="oldPassword" type="password" placeholder="비밀번호를 입력하세요" />
 		</div>
   
 		<!-- New Password 입력 -->
 		<div class="form-group">
 		  <label for="new-password">New Password</label>
-		  <input id="new-password" type="password" placeholder="새로운 비밀번호를 입력하세요" />
+		  <input id="new-password" v-model="newPassword" type="password" placeholder="새로운 비밀번호를 입력하세요" />
 		</div>
   
 		<!-- New Password 확인 -->
 		<div class="form-group">
 		  <label for="confirm-password">New Password Confirmation</label>
-		  <input id="confirm-password" type="password" placeholder="새로운 비밀번호를 다시 입력하세요" />
+		  <input id="confirm-password" v-model="newPassword2" type="password" placeholder="새로운 비밀번호를 다시 입력하세요" />
 		</div>
   
 		<!-- 버튼 그룹 -->
