@@ -116,7 +116,7 @@ const logout = () => {
   
 	  <main class="content-container">
 		<!-- 왼쪽 사이드 메뉴 -->
-		<div class="left-section">
+		<div class="menu">
 			<div class="user-img">
 			  <img src="@/assets/icons/user.png" alt="userImg" class="user" />
 			</div>
@@ -195,7 +195,7 @@ const logout = () => {
 }
 
 /* 왼쪽 메뉴 */
-.left-section {
+.menu {
   background-color: #de7268;
   padding: 20px;
   display: flex;
