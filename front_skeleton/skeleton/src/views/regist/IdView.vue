@@ -1,107 +1,122 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/counter'
-import { ref, onMounted } from 'vue'
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/counter";
+import { ref, onMounted } from "vue";
 import axios from "axios";
-import showAlert from '@/utils/swal';
+import showAlert from "@/utils/swal";
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    timeout: 5000,
+  baseURL: "http://localhost:8080/api",
+  timeout: 5000,
 });
 
-const router = useRouter()
-const userStore = useUserStore()
+const router = useRouter();
+const userStore = useUserStore();
 
-const id = ref('')
+const id = ref("");
 
 const prevStep = () => {
-	router.push('/regist/nick') 
-}
+  router.push("/regist/nick");
+};
 
 const nextStep = async () => {
-	if (!id.value.trim()) {
-		await showAlert('입력 오류', '아이디를 입력해주세요.', 'warning')
-        return;
-    }
-    try {
-		const formData = new FormData()
-        formData.append('userId', id.value)
-        const response = await api.post("user/check/id", formData)
-		
-        if (response.data) {
-			console.log('아이디 중복 아님', response.data)
-            userStore.setId(id.value)
-            router.push("/regist/pw")
-        } else {
-			await showAlert('아이디 설정 실패', '이 아이디는 이미 사용 중이에요. 다른 아이디를 시도해 보세요!', 'error')
-        }
-    } catch (error) {
-		if (error.response && error.response.status === 409) {
-			await showAlert('아이디 중복', '이 아이디는 이미 사용 중이에요. 다른 아이디를 시도해 보세요!', 'error')
-        } else {
-			console.error("아이디 확인 중 오류 발생:", error)
-            await showAlert('서버 오류', '아이디 확인 중 문제가 발생했습니다. 다시 시도해주세요.', 'error')
-        }
-    }
-}
+  if (!id.value.trim()) {
+    await showAlert("입력 오류", "아이디를 입력해주세요.", "warning");
+    return;
+  }
+  try {
+    const formData = new FormData();
+    formData.append("userId", id.value);
+    const response = await api.post("user/check/id", formData);
 
-const progressWidth = ref(0)
+    if (response.data) {
+      console.log("아이디 중복 아님", response.data);
+      userStore.setId(id.value);
+      router.push("/regist/pw");
+    } else {
+      await showAlert(
+        "아이디 설정 실패",
+        "이 아이디는 이미 사용 중이에요. 다른 아이디를 시도해 보세요!",
+        "error"
+      );
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 409) {
+      await showAlert(
+        "아이디 중복",
+        "이 아이디는 이미 사용 중이에요. 다른 아이디를 시도해 보세요!",
+        "error"
+      );
+    } else {
+      console.error("아이디 확인 중 오류 발생:", error);
+      await showAlert(
+        "서버 오류",
+        "아이디 확인 중 문제가 발생했습니다. 다시 시도해주세요.",
+        "error"
+      );
+    }
+  }
+};
+
+const progressWidth = ref(25);
 
 onMounted(() => {
-  let progress = 0;
+  let progress = 25;
   const interval = setInterval(() => {
     progress += 5; // 증가 속도
     progressWidth.value = progress;
 
     if (progress >= 50) {
-      clearInterval(interval); // 25%에 도달하면 애니메이션 종료
+      clearInterval(interval);
     }
   }, 100); // 100ms마다 업데이트
 });
 </script>
 
 <template>
-	<div class="container-fluid">
-	  <!-- Progress Bar -->
-	  <div class="progress-container">
-		<div class="progress-text">2 / 4</div>
-		<div class="progress-bar">
-		  <div class="progress-fill" :style="{ width: progressWidth + '%' }"></div>
-		</div>
-	  </div>
-  
-	  <!-- Card: Form Content -->
-	  <div class="card">
-		<div class="form-content">
-		  <!-- Left Section: Icon and Title -->
-		  <div class="left-section">
-			<img src="@/assets/small.png" alt="icon" class="icon" />
-			<h2>계정 ID 만들기</h2>
-		  </div>
-  
-		  <!-- Right Section: Input and Buttons -->
-		  <div class="right-section">
-			<div class="input-section">
-			  <label for="id">아이디를 입력하세요!</label>
-			  <p>아이디는 나중에 변경할 수 없어요.</p>
-			  <input
-				id="id"
-				v-model="id"
-				type="text"
-				placeholder="아이디를 입력하세요"
-			  />
-			</div>
-  
-			<!-- Navigation Buttons -->
-			<div class="button-group">
-			  <button class="prev-button" @click="prevStep">&lt; 이전</button>
-			  <button class="next-button" @click="nextStep">다음</button>
-			</div>
-		  </div>
-		</div>
-	  </div>
-	</div>
+  <div class="container-fluid">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-text">2 / 4</div>
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          :style="{ width: progressWidth + '%' }"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Card: Form Content -->
+    <div class="card">
+      <div class="form-content">
+        <!-- Left Section: Icon and Title -->
+        <div class="left-section">
+          <img src="@/assets/small.png" alt="icon" class="icon" />
+          <h2>계정 ID 만들기</h2>
+        </div>
+
+        <!-- Right Section: Input and Buttons -->
+        <div class="right-section">
+          <div class="input-section">
+            <label for="id">아이디를 입력하세요!</label>
+            <p>아이디는 나중에 변경할 수 없어요.</p>
+            <input
+              id="id"
+              v-model="id"
+              type="text"
+              placeholder="아이디를 입력하세요"
+            />
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="button-group">
+            <button class="prev-button" @click="prevStep">&lt; 이전</button>
+            <button class="next-button" @click="nextStep">다음</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

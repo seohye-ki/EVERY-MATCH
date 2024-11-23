@@ -21,7 +21,11 @@ const pw = ref("");
 const login = async () => {
   // 필수 입력값 검증
   if (!id.value || !pw.value) {
-    await showAlert("입력 오류", "아이디와 비밀번호를 입력해주세요.", "warning");
+    await showAlert(
+      "입력 오류",
+      "아이디와 비밀번호를 입력해주세요.",
+      "warning"
+    );
     return;
   }
 
@@ -37,11 +41,10 @@ const login = async () => {
     // 로그인 성공 처리
     if (response.status === 200) {
       console.log("로그인 성공", response.data);
-      await showAlert("로그인 성공", "환영합니다!", "success");
 
       // JWT 토큰 저장
       sessionStorage.setItem("Authorization", response.data["access-token"]);
-	  sessionStorage.setItem("nickname", response.data["nickname"]);
+      sessionStorage.setItem("nickname", response.data["nickname"]);
 
       // 메인 페이지로 이동
       router.push("/main");
@@ -49,7 +52,11 @@ const login = async () => {
   } catch (error) {
     // 에러 상태에 따른 처리
     if (error.response && error.response.status === 401) {
-      await showAlert("로그인 실패", "아이디 또는 비밀번호가 잘못되었습니다.", "error");
+      await showAlert(
+        "로그인 실패",
+        "아이디 또는 비밀번호가 잘못되었습니다.",
+        "error"
+      );
     } else {
       await showAlert(
         "서버 오류",
@@ -62,27 +69,31 @@ const login = async () => {
 };
 </script>
 <template>
-	<div class="container">
-	  <div class="login-form">
-		<!-- Logo -->
-		<img src="/src/assets/EVERYMATCH.png" alt="logo" class="logo" />
-  
-		<!-- Login Form -->
-		<form @submit.prevent="login">
-		  <div class="input-section">
-		    <input v-model="id" type="text" placeholder="아이디를 입력하세요" />
-		    <input v-model="pw" type="password" placeholder="비밀번호를 입력하세요"/>
-		  </div>
-		  <button @click="login" type="submit">로그인</button>
-		</form>
-  
-		<!-- Links -->
-		<div class="links">
-		  <a href="./find">비밀번호 재설정</a>
-		  <a href="./regist/nick">회원가입</a>
-		</div>
-	  </div>
-	</div>
+  <div class="container">
+    <div class="login-form">
+      <!-- Logo -->
+      <img src="/src/assets/EVERYMATCH.png" alt="logo" class="logo" />
+
+      <!-- Login Form -->
+      <form @submit.prevent="login">
+        <div class="input-section">
+          <input v-model="id" type="text" placeholder="아이디를 입력하세요" />
+          <input
+            v-model="pw"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+          />
+        </div>
+        <button @click="login" type="submit">로그인</button>
+      </form>
+
+      <!-- Links -->
+      <div class="links">
+        <a href="./find">비밀번호 재설정</a>
+        <a href="./regist/nick">회원가입</a>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
