@@ -212,7 +212,7 @@ const goTest = () => {
         <div class="recommend-button">
           <a href="recommend">
             <img src="@/assets/icons/warning.png" alt="warning" />
-            팀을 추천 받을 수 있어요.
+            팀 추천을 받을 수 있어요.
           </a>
         </div>
       </div>

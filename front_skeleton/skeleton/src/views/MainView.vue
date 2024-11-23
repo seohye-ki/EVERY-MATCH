@@ -226,7 +226,6 @@ const goToChat = () => {
 
 /* 왼쪽 메뉴 */
 .menu {
-.menu {
   background-color: #de7268;
   padding: 20px;
   display: flex;
