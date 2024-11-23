@@ -1,68 +1,80 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/counter'
-import { ref, onMounted } from 'vue'
-import axios from "axios"
-import showAlert from '@/utils/swal';
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/counter";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import showAlert from "@/utils/swal";
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    timeout: 5000,
+  baseURL: "http://localhost:8080/api",
+  timeout: 5000,
 });
 
-const router = useRouter()
-const userStore = useUserStore()
+const router = useRouter();
+const userStore = useUserStore();
 
-const email = ref('')
+const email = ref("");
 
 const prevStep = () => {
-    router.push('/regist/id') 
-}
+  router.push("/regist/id");
+};
 
 const isValidEmailFormat = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
-}
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
 const checkEmailDuplicate = async () => {
   try {
-    const formData = new FormData()
-    formData.append('email', email.value)
-    const response = await api.post("user/check/email", formData)
+    const formData = new FormData();
+    formData.append("email", email.value);
+    const response = await api.post("user/check/email", formData);
 
     if (response.status === 200) {
-      return true
+      return true;
     }
   } catch (error) {
     if (error.response && error.response.status === 409) {
-      await showAlert('이메일 중복', '이 이메일은 이미 사용 중입니다. 다른 이메일을 입력해 주세요.', 'error')
+      await showAlert(
+        "이메일 중복",
+        "이 이메일은 이미 사용 중입니다. 다른 이메일을 입력해 주세요.",
+        "error"
+      );
     } else {
-      console.error("서버 오류 발생:", error)
-      await showAlert('서버 오류', '이메일 확인 중 문제가 발생했습니다. 다시 시도해주세요.', 'error')
+      console.error("서버 오류 발생:", error);
+      await showAlert(
+        "서버 오류",
+        "이메일 확인 중 문제가 발생했습니다. 다시 시도해주세요.",
+        "error"
+      );
     }
-    return false
+    return false;
   }
-}
+};
 
 const nextStep = async (event) => {
-  event.preventDefault()
+  event.preventDefault();
   if (!isValidEmailFormat(email.value)) {
-    await showAlert('입력 오류', '이메일 주소가 올바르지 않아요. 정확한 형식으로 입력해 주세요.', 'warning')
-    return
+    await showAlert(
+      "입력 오류",
+      "이메일 주소가 올바르지 않아요. 정확한 형식으로 입력해 주세요.",
+      "warning"
+    );
+    return;
   }
 
-  const isNotDuplicate = await checkEmailDuplicate()
+  const isNotDuplicate = await checkEmailDuplicate();
   if (isNotDuplicate) {
-    userStore.setEmail(email.value)
-    userStore.submitRegist()
-    router.push("/regist/fin")
+    userStore.setEmail(email.value);
+    userStore.submitRegist();
+    router.push("/regist/fin");
   }
-}
+};
 
-const progressWidth = ref(0)
+const progressWidth = ref(75);
 
 onMounted(() => {
-  let progress = 0;
+  let progress = 75;
   const interval = setInterval(() => {
     progress += 5; // 증가 속도
     progressWidth.value = progress;
@@ -75,47 +87,51 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="container-fluid">
-	  <!-- Progress Bar -->
-	  <div class="progress-container">
-		<div class="progress-text">4 / 4</div>
-		<div class="progress-bar">
-		  <div class="progress-fill" :style="{ width: progressWidth + '%' }"></div>
-		</div>
-	  </div>
-  
-	  <!-- Card: Form Content -->
-	  <div class="card">
-		<div class="form-content">
-		  <!-- Left Section: Icon and Title -->
-		  <div class="left-section">
-			<img src="@/assets/small.png" alt="icon" class="icon" />
-			<h2>이메일 입력</h2>
-		  </div>
-  
-		  <!-- Right Section: Input and Buttons -->
-		  <div class="right-section">
-			<div class="input-section">
-			  <label for="email">
-				<span class="alert-icon">🔔</span> 경기 시작 1시간 전에 알림을 보내드릴게요
-			  </label>
-			  <input
-				id="email"
-				v-model="email"
-				type="email"
-				placeholder="이메일을 입력하세요"
-			  />
-			</div>
-  
-			<!-- Navigation Buttons -->
-			<div class="button-group">
-			  <button class="prev-button" @click="prevStep">&lt; 이전</button>
-			  <button class="next-button" @click="nextStep">다음</button>
-			</div>
-		  </div>
-		</div>
-	  </div>
-	</div>
+  <div class="container-fluid">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-text">4 / 4</div>
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          :style="{ width: progressWidth + '%' }"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Card: Form Content -->
+    <div class="card">
+      <div class="form-content">
+        <!-- Left Section: Icon and Title -->
+        <div class="left-section">
+          <img src="@/assets/small.png" alt="icon" class="icon" />
+          <h2>이메일 입력</h2>
+        </div>
+
+        <!-- Right Section: Input and Buttons -->
+        <div class="right-section">
+          <div class="input-section">
+            <label for="email">
+              <span class="alert-icon">🔔</span> 경기 시작 1시간 전에 알림을
+              보내드릴게요
+            </label>
+            <input
+              id="email"
+              v-model="email"
+              type="email"
+              placeholder="이메일을 입력하세요"
+            />
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="button-group">
+            <button class="prev-button" @click="prevStep">&lt; 이전</button>
+            <button class="next-button" @click="nextStep">완료</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

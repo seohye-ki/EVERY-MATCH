@@ -1,36 +1,44 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/counter'
-import { ref, onMounted } from 'vue'
-import showAlert from '@/utils/swal';
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/counter";
+import { ref, onMounted } from "vue";
+import showAlert from "@/utils/swal";
 
-const router = useRouter()
-const userStore = useUserStore()
+const router = useRouter();
+const userStore = useUserStore();
 
-const password = ref('')
-const confirmPassword = ref('')
+const password = ref("");
+const confirmPassword = ref("");
 
 const prevStep = () => {
-    router.push('/regist/id') 
-}
+  router.push("/regist/id");
+};
 
 const nextStep = async () => {
-    if (password.value.length < 8) {
-        await showAlert('입력 오류', '비밀번호는 8자 이상이어야 합니다.', 'warning')
-        return;
-    }
-    if (password.value !== confirmPassword.value) {
-        await showAlert('비밀번호 불일치', '비밀번호가 일치하지 않아요. 다시 한 번 확인해 주세요.', 'error')
-        return;
-    }
-    userStore.setPassword(password.value)
-    router.push('/regist/email')
-}
+  if (password.value.length < 8) {
+    await showAlert(
+      "입력 오류",
+      "비밀번호는 8자 이상이어야 합니다.",
+      "warning"
+    );
+    return;
+  }
+  if (password.value !== confirmPassword.value) {
+    await showAlert(
+      "비밀번호 불일치",
+      "비밀번호가 일치하지 않아요. 다시 한 번 확인해 주세요.",
+      "error"
+    );
+    return;
+  }
+  userStore.setPassword(password.value);
+  router.push("/regist/email");
+};
 
-const progressWidth = ref(0)
+const progressWidth = ref(50);
 
 onMounted(() => {
-  let progress = 0;
+  let progress = 50;
   const interval = setInterval(() => {
     progress += 5; // 증가 속도
     progressWidth.value = progress;
@@ -43,53 +51,58 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="container-fluid">
-	  <!-- Progress Bar -->
-	  <div class="progress-container">
-		<div class="progress-text">3 / 4</div>
-		<div class="progress-bar">
-		  <div class="progress-fill" :style="{ width: progressWidth + '%' }"></div>
-		</div>
-	  </div>
-  
-	  <!-- Card: Form Content -->
-	  <div class="card">
-		<div class="form-content">
-		  <!-- Left Section: Icon and Title -->
-		  <div class="left-section">
-			<img src="@/assets/small.png" alt="icon" class="icon" />
-			<h2>안전한 비밀번호 만들기</h2>
-		  </div>
-  
-		  <!-- Right Section: Input and Buttons -->
-		  <div class="right-section">
-			<div class="input-section">
-			  <label for="password">비밀번호는 보안을 위해 8자 이상이어야 합니다</label>
-			  <input
-				id="password"
-				v-model="password"
-				type="password"
-				placeholder="비밀번호를 입력하세요"
-			  />
-			  <input
-				id="confirm-password"
-				v-model="confirmPassword"
-				type="password"
-				placeholder="비밀번호 확인"
-			  />
-			</div>
-  
-			<!-- Navigation Buttons -->
-			<div class="button-group">
-			  <button class="prev-button" @click="prevStep">&lt; 이전</button>
-			  <button class="next-button" @click="nextStep">다음</button>
-			</div>
-		  </div>
-		</div>
-	  </div>
-	</div>
+  <div class="container-fluid">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-text">3 / 4</div>
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          :style="{ width: progressWidth + '%' }"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Card: Form Content -->
+    <div class="card">
+      <div class="form-content">
+        <!-- Left Section: Icon and Title -->
+        <div class="left-section">
+          <img src="@/assets/small.png" alt="icon" class="icon" />
+          <h2>안전한 비밀번호 만들기</h2>
+        </div>
+
+        <!-- Right Section: Input and Buttons -->
+        <div class="right-section">
+          <div class="input-section">
+            <label for="password"
+              >비밀번호는 보안을 위해 8자 이상이어야 합니다</label
+            >
+            <input
+              id="password"
+              v-model="password"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+            />
+            <input
+              id="confirm-password"
+              v-model="confirmPassword"
+              type="password"
+              placeholder="비밀번호 확인"
+            />
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="button-group">
+            <button class="prev-button" @click="prevStep">&lt; 이전</button>
+            <button class="next-button" @click="nextStep">다음</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-  
+
 <style scoped>
 /* 부모 컨테이너 */
 .container-fluid {

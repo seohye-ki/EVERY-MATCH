@@ -155,7 +155,7 @@ const deleteAccount = async () => {
 .content {
   display: flex;
   width: 95%;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 150px);
   margin-top: 30px;
   background-color: #ffffff;
   border-radius: 16px;

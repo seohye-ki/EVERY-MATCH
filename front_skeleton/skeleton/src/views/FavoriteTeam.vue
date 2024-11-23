@@ -1,24 +1,24 @@
 <script setup>
-import team from '@/components/Team.vue'
-import favorite from '@/components/Favorite.vue'
-import { ref, onBeforeMount, } from 'vue';
-import { useRouter } from 'vue-router'
-import axios from 'axios'
+import Team from "@/components/Team.vue";
+import favorite from "@/components/Favorite.vue";
+import { ref, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
 import showAlert from "@/utils/swal";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',  
+  baseURL: "http://localhost:8080/api",
 });
 
 api.interceptors.request.use(
   (config) => {
     // sessionStorage에서 JWT 토큰 가져오기
-    const token = sessionStorage.getItem('Authorization');
+    const token = sessionStorage.getItem("Authorization");
     // 토큰이 존재하면 Authorization 헤더에 추가
     if (token) {
-      config.headers['Authorization'] = `${token}`;
+      config.headers["Authorization"] = `${token}`;
     }
-    
+
     // config 반환 (요청을 보내기 위해)
     return config;
   },
@@ -30,144 +30,196 @@ api.interceptors.request.use(
 
 onBeforeMount(async () => {
   try {
-    const response = await api.get('/favorite')
-    teams.value = response.data.allTeams
-    showTeams.value = teams.value
-    favoriteTeams.value = response.data.favoriteTeams
+    const response = await api.get("/favorite");
+    teams.value = response.data.allTeams;
+    showTeams.value = teams.value.filter((team) => team.sportName === "야구");
+    favoriteTeams.value = response.data.favoriteTeams;
   } catch (error) {
-    console.error('Error fetching events:', error)
+    console.error("Error fetching events:", error);
   }
-  console.log(showTeams)
+  console.log(showTeams);
 });
 
-
-const useRout = useRouter()
-const teams = ref()
-const showTeams = ref()
-const favoriteTeams = ref()
-
+const useRout = useRouter();
+const teams = ref();
+const showTeams = ref();
+const favoriteTeams = ref();
 
 const deleteTeam = async (teamId) => {
-    favoriteTeams.value.splice(favoriteTeams.value.findIndex(team => team.teamId === teamId), 1)
-}
+  favoriteTeams.value.splice(
+    favoriteTeams.value.findIndex((team) => team.teamId === teamId),
+    1
+  );
+};
 
 const plusTeam = async (teamId) => {
-    const teamExists = favoriteTeams.value.some(team => team.teamId == teamId)
-    if (!teamExists) {
-        const teamToAdd = teams.value.find(team => team.teamId === teamId)
-        favoriteTeams.value.push(teamToAdd)
-    }
-}
+  const teamExists = favoriteTeams.value.some((team) => team.teamId == teamId);
+  if (!teamExists) {
+    const teamToAdd = teams.value.find((team) => team.teamId === teamId);
+    favoriteTeams.value.push(teamToAdd);
+  }
+};
 
 const storage = async () => {
-    const Ids = favoriteTeams.value.map(team => team.teamId);
-    console.log(Ids)
-    try {
-    const response = await api.put('/favorite', Ids)
+  const Ids = favoriteTeams.value.map((team) => team.teamId);
+  console.log(Ids);
+  try {
+    const response = await api.put("/favorite", Ids);
     if (response.status === 200) {
-        await showAlert("저장완료", null, "success");
-		useRout.push("main")
+      await showAlert("저장완료", null, "success");
+      useRout.push("main");
     } else {
-		await showAlert("오류발생", "다시 시도해주세요", "error");
+      await showAlert("오류발생", "다시 시도해주세요", "error");
     }
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+};
 
-    } catch (error) {
-        console.error('Error fetching events:', error)
-    }
-}
+const activeFilter = ref("baseball");
 
 const showAll = () => {
-    showTeams.value = teams.value
-}
- 
+  activeFilter.value = "all";
+  showTeams.value = teams.value;
+};
+
 const showBaseball = () => {
-    showTeams.value = teams.value.filter(team => team.sportName === "Baseball")
-}
+  activeFilter.value = "baseball";
+  showTeams.value = teams.value.filter((team) => team.sportName === "야구");
+};
 
 const showSoccer = () => {
-    showTeams.value = teams.value.filter(team => team.sportName === "Soccer" || team.sportName === "Football")
-}
+  activeFilter.value = "soccer";
+  showTeams.value = teams.value.filter((team) => team.sportName === "축구");
+};
+
+const showBasketball = () => {
+  activeFilter.value = "basketball";
+  showTeams.value = teams.value.filter((team) => team.sportName === "농구");
+};
+
+const showVolleyball = () => {
+  activeFilter.value = "volleyball";
+  showTeams.value = teams.value.filter((team) => team.sportName === "배구");
+};
 
 const cancel = () => {
-    useRout.push("main")
-}
+  useRout.push("main");
+};
+
+const goTest = () => {
+  useRou.push("/test");
+};
 </script>
 <template>
-	<div class="favorite-container">
-	  <!-- 헤더 -->
-	  <header class="header">
-		<img src="@/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
-	  </header>
-  
-	  <!-- 콘텐츠 영역 -->
-	  <main class="content">
-		<!-- 왼쪽 팀 목록 -->
-		<div class="team-selection">
-		  <!-- 필터 버튼 -->
-		  <div class="filter-buttons">
-			<button
-			  @click="showAll"
-			  class="filter-button"
-			  :class="{ active: showTeams.length === teams.length }"
-			>
-			  전체
-			</button>
-			<button
-			  @click="showBaseball"
-			  class="filter-button"
-			  :class="{ active: showTeams.some(team => team.sportName === 'Baseball') }"
-			>
-			  야구
-			</button>
-			<button
-			  @click="showSoccer"
-			  class="filter-button"
-			  :class="{ active: showTeams.some(team => team.sportName === 'Soccer' || team.sportName === 'Football') }"
-			>
-			  축구
-			</button>
-		  </div>
-  
-		  <!-- 팀 목록 -->
-		  <div class="team-list">
-			<div
-			  class="team-logo"
-			  v-for="team in showTeams"
-			  :key="team.teamId"
-			  @click="plusTeam(team.teamId)"
-			  :class="{ selected: favoriteTeams.some(fav => fav.teamId === team.teamId) }"
-			>
-			  <img :src="`/src/assets/imgs/${team.teamLogo}`" :alt="team.teamName" />
-			</div>
-		  </div>
-		</div>
-  
-		<!-- 오른쪽 선택된 팀 -->
-		<div class="favorite-selection">
-		  <h2 class="favorite-title">선택된 팀</h2>
-		  <div class="favorite-list">
-			<div v-if="favoriteTeams.length === 0" class="empty-message">
-				아직 선택된 팀이 없습니다.
-			</div>
-			<div
-				class="favorite-item"
-				v-for="team in favoriteTeams"
-				:key="team.teamId"
-			>
-				<span>{{ team.teamName }}</span>
-				<button @click="deleteTeam(team.teamId)" class="delete-button">×</button>
-			</div>
-		  </div>
-		  <!-- 버튼 그룹 -->
-		  <div class="button-group">
-			<button @click="cancel" class="cancel-button">닫기</button>
-			<button @click="storage" class="save-button">저장</button>
-		  </div>
-		</div>
-	  </main>
-	</div>
+  <div class="favorite-container">
+    <!-- 헤더 -->
+    <header class="header">
+      <img src="@/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
+    </header>
+
+    <!-- 콘텐츠 영역 -->
+    <main class="content">
+      <!-- 왼쪽 팀 목록 -->
+      <div class="team-selection">
+        <!-- 필터 버튼 -->
+        <div class="filter-buttons">
+          <button
+            @click="showBaseball"
+            class="filter-button"
+            :class="{
+              active: activeFilter === 'baseball' || activeFilter === 'all',
+            }"
+          >
+            야구
+          </button>
+          <button
+            @click="showSoccer"
+            class="filter-button"
+            :class="{
+              active: activeFilter === 'soccer' || activeFilter === 'all',
+            }"
+          >
+            축구
+          </button>
+          <button
+            @click="showBasketball"
+            class="filter-button"
+            :class="{
+              active: activeFilter === 'basketball' || activeFilter === 'all',
+            }"
+          >
+            농구
+          </button>
+          <button
+            @click="showVolleyball"
+            class="filter-button"
+            :class="{
+              active: activeFilter === 'volleyball' || activeFilter === 'all',
+            }"
+          >
+            배구
+          </button>
+          <div class="sep">|</div>
+          <button
+            @click="showAll"
+            class="filter-button"
+            :class="{ active: activeFilter === 'all' }"
+          >
+            전체
+          </button>
+        </div>
+
+        <!-- 팀 목록 -->
+        <div class="team-list">
+          <Team
+            class="team-logo"
+            v-for="team in showTeams"
+            :key="team.teamId"
+            :teamId="team.teamId"
+            :teamLogo="team.teamLogo"
+            @click="plusTeam(team.teamId)"
+            :class="{
+              selected: favoriteTeams.some((fav) => fav.teamId === team.teamId),
+            }"
+          />
+        </div>
+      </div>
+
+      <!-- 오른쪽 선택된 팀 -->
+      <div class="favorite-selection">
+        <h2 class="favorite-title">선택된 팀</h2>
+        <div class="favorite-list">
+          <div v-if="favoriteTeams.length === 0" class="empty-message">
+            아직 선택된 팀이 없습니다.
+          </div>
+          <div
+            class="favorite-item"
+            v-for="team in favoriteTeams"
+            :key="team.teamId"
+          >
+            <span>{{ team.teamName }}</span>
+            <button @click="deleteTeam(team.teamId)" class="delete-button">
+              ×
+            </button>
+          </div>
+        </div>
+        <!-- 버튼 그룹 -->
+        <div class="button-group">
+          <button @click="cancel" class="cancel-button">닫기</button>
+          <button @click="storage" class="save-button">저장</button>
+        </div>
+        <div class="recommend-button">
+          <a href="recommend">
+            <img src="@/assets/icons/warning.png" alt="warning" />
+            팀을 추천 받을 수 있어요.
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
-  
+
 <style scoped>
 /* 전체 컨테이너 */
 .favorite-container {
@@ -197,9 +249,8 @@ const cancel = () => {
   grid-template-columns: 2fr 1fr; /* 왼쪽 팀 선택 영역, 오른쪽 즐겨찾기 */
   gap: 20px;
   width: 95%;
-  max-width: 1200px;
   background-color: #ffffff;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 150px);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 다른 페이지와 동일한 shadow 적용 */
   overflow: hidden;
@@ -211,6 +262,12 @@ const cancel = () => {
   display: flex;
   flex-direction: column;
   padding: 20px;
+}
+
+.sep {
+  color: #de7268;
+  font-size: 20px;
+  padding-top: 5px;
 }
 
 /* 필터 버튼 */
@@ -277,13 +334,13 @@ const cancel = () => {
 
 /* 오른쪽 즐겨찾기 */
 .favorite-selection {
-  background-color: #de7268;
-  padding: 20px;
-  border-radius: 12px;
-  color: #ffffff;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  padding: 20px;
+  background-color: #de7268;
+  border-radius: 12px;
+  color: #ffffff;
+  /* align-items: stretch; */
   height: 100%;
 }
 
@@ -299,10 +356,11 @@ const cancel = () => {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  max-height: 560px;
   gap: 10px;
   overflow-y: auto; /* 스크롤 활성화 */
   padding: 0;
-  margin: 0;
+  margin: 0 0 10px;
 }
 
 .favorite-item {
@@ -347,7 +405,7 @@ const cancel = () => {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: auto;
 }
 
 .cancel-button,
@@ -370,19 +428,35 @@ const cancel = () => {
   color: #cd685e;
 }
 
-.team-list::-webkit-scrollbar,
-.favorite-list::-webkit-scrollbar {
+.recommend-button {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.recommend-button a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.recommend-button:hover a {
+  text-decoration: underline;
+}
+
+.team-list::-webkit-scrollbar {
   width: 8px;
 }
 
-.team-list::-webkit-scrollbar-thumb,
-.favorite-list::-webkit-scrollbar-thumb {
-  background-color: #de7268; /* 스크롤바 색상 */
+.team-list::-webkit-scrollbar-thumb {
+  background-color: #de7268;
   border-radius: 4px;
 }
 
-.team-list::-webkit-scrollbar-track,
-.favorite-list::-webkit-scrollbar-track {
-  background-color: #f0f0f0; /* 스크롤바 배경 */
+.team-list::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
 }
 </style>
