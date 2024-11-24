@@ -12,6 +12,25 @@ const api = axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
+api.interceptors.request.use(
+  (config) => {
+    // sessionStorage에서 JWT 토큰 가져오기
+    const token = sessionStorage.getItem("Authorization");
+    // 토큰이 존재하면 Authorization 헤더에 추가
+    if (token) {
+      config.headers["Authorization"] = `${token}`;
+    }
+
+    // config 반환 (요청을 보내기 위해)
+    return config;
+    
+  },
+  (error) => {
+    // 요청 오류 처리
+    return Promise.reject(error);
+  }
+);
+
 // Reactive 데이터 선언
 const questions = ref([
   "가장 좋아하는 스포츠는 무엇인가요?",
@@ -77,17 +96,24 @@ const nextQuestion = (answer) => {
 const showResult = async () => {
   isLoading.value = true;
   try {
-    const response = await api.post("/chat/ask", answerMessage.value);
-    if (response.status === 200) {
-      setTimeout(() => {
-        resultMessage.value = response.data;
-        console.log(resultMessage.value);
-        isResultVisible.value = true;
-        isLoading.value = false;
-      }, 5000);
+    const expiry = sessionStorage.getItem("expiry")
+    const currentTime = new Date().getTime()
+    if (currentTime > expiry) {
+      sessionStorage.clear()
+      useRou.push("/")
     } else {
-      await showAlert("오류발생", "다시 시도해주세요", "error");
-      isLoading.value = false;
+      const response = await api.post("/chat/team", answerMessage.value);
+      if (response.status === 200) {
+        setTimeout(() => {
+          resultMessage.value = response.data;
+          console.log(resultMessage.value);
+          isResultVisible.value = true;
+          isLoading.value = false;
+        }, 5000);
+      } else {
+        await showAlert("오류발생", "다시 시도해주세요", "error");
+        isLoading.value = false;
+      }
     }
   } catch (error) {
     console.error("Error fetching results:", error);

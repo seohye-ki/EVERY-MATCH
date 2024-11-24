@@ -30,10 +30,17 @@ api.interceptors.request.use(
 
 onBeforeMount(async () => {
   try {
+    const expiry = sessionStorage.getItem("expiry")
+    const currentTime = new Date().getTime()
+    if (currentTime > expiry) {
+      sessionStorage.clear()
+      useRout.push("/")
+    } else {
     const response = await api.get("/favorite");
     teams.value = response.data.allTeams;
     showTeams.value = teams.value.filter((team) => team.sportName === "야구");
     favoriteTeams.value = response.data.favoriteTeams;
+    }
   } catch (error) {
     console.error("Error fetching events:", error);
   }

@@ -26,13 +26,22 @@ const useRou = useRouter();
 // 메시지 전송 로직
 const sendMessage = async () => {
   if (newMessage.value.trim() === "") return; // 빈 메시지는 무시
-  const message = { text: newMessage.value };
-
+  const message = { answer: false, sender: nickname, text: newMessage.value, timestamp: new Date().getTime() };
   try {
-    const response = await api.post("/chat/send", message); // 가상의 API
-    if (response.status === 200) {
-      messages.value.push(message); // 성공 시 메시지 추가
-      newMessage.value = ""; // 입력창 초기화
+    const expiry = sessionStorage.getItem("expiry")
+    const currentTime = new Date().getTime()
+    if (currentTime > expiry) {
+      sessionStorage.clear()
+      useRou.push("/")
+    } else {
+      const response = await api.post("/chat/ask", message); // 가상의 API
+      if (response.status === 200) {
+        console.log(response)
+        const resMessage = { answer: true, sender: "파트너", text: response.data, timestamp: new Date().getTime() };
+        messages.value.push(message); // 성공 시 메시지 추가
+        messages.value.push(resMessage);
+        newMessage.value = ""; // 입력창 초기화
+      }
     }
   } catch (error) {
     console.error("Error sending message:", error);
@@ -47,6 +56,10 @@ const logout = () => {
 const goMain = () => {
   useRou.push("/");
 };
+const updateMessage = (event) => {
+      newMessage.value = event.target.value;
+}
+
 </script>
 
 <template>
@@ -122,7 +135,8 @@ const goMain = () => {
         <!-- 채팅 입력창 -->
         <div class="chat-input-container">
           <input
-            v-model="newMessage"
+            :value="newMessage"
+            @input="updateMessage"
             @keyup.enter="sendMessage"
             type="text"
             placeholder="메시지를 입력하세요..."
