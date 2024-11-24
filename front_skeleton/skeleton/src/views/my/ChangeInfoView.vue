@@ -28,10 +28,17 @@ const email = ref('');
 // 사용자 정보 불러오기
 onMounted(async () => {
   try {
-    const response = await api.get('/user');
-    userId.value = response.data.userId;
-    nickname.value = response.data.nickname;
-    email.value = response.data.email;
+    const expiry = sessionStorage.getItem("expiry")
+    const currentTime = new Date().getTime()
+    if (currentTime > expiry) {
+      sessionStorage.clear()
+      useRout.push("/")
+    } else {
+      const response = await api.get('/user');
+      userId.value = response.data.userId;
+      nickname.value = response.data.nickname;
+      email.value = response.data.email;
+    }
   } catch (error) {
     console.error('Failed to fetch user data:', error);
   }

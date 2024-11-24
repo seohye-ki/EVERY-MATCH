@@ -26,16 +26,21 @@ const newPassword = ref('')
 const newPassword2 = ref('')
 
 const rightPW = async () => {
-  const form = new FormData()
-  form.append('oldPassword',oldPassword.value)
-  form.append('newPassword',newPassword.value)
-  form.append('newPassword2',newPassword2.value)
-  console.log(newPassword.value)
-  console.log(newPassword2.value)
   try{
-    const response = await api.put('/user/update-password' ,form )
-    await showAlert('변경 완료', '비밀번호가 변경되었습니다.', 'success')
-	useRout.push('/main')
+    const expiry = sessionStorage.getItem("expiry")
+    const currentTime = new Date().getTime()
+    if (currentTime > expiry) {
+      sessionStorage.clear()
+      useRou.push("/")
+    } else {
+      const form = new FormData()
+      form.append('oldPassword',oldPassword.value)
+      form.append('newPassword',newPassword.value)
+      form.append('newPassword2',newPassword2.value)
+      const response = await api.put('/user/update-password' ,form )
+      await showAlert('변경 완료', '비밀번호가 변경되었습니다.', 'success')
+	    useRout.push('/main')
+    }
   } catch (error) {
     console.log(error.status)
 	oldPassword.value = ''

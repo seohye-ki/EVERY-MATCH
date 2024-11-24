@@ -24,13 +24,20 @@ const password = ref("")
 
 const validate = async () => {
   try {
-    const formData = new FormData()
-    formData.append('password', password.value)
-    const response = await api.post("/user/validate-password", formData)
+    const expiry = sessionStorage.getItem("expiry")
+    const currentTime = new Date().getTime()
+    if (currentTime > expiry) {
+      sessionStorage.clear()
+      useRou.push("/")
+    } else {
+      const formData = new FormData()
+      formData.append('password', password.value)
+      const response = await api.post("/user/validate-password", formData)
 
-    if (response.status === 200) {
-      await showAlert('인증 성공', '비밀번호가 확인되었습니다.', 'success')
-      router.push("./info")
+      if (response.status === 200) {
+        await showAlert('인증 성공', '비밀번호가 확인되었습니다.', 'success')
+        router.push("./info")
+      }
     }
   } catch (error) {
 	  password.value = ''
