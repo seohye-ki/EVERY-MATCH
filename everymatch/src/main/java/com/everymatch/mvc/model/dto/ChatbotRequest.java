@@ -9,6 +9,10 @@ public class ChatbotRequest {
 	private List<Message> messages;
 	private double temperature;
 	
+	public ChatbotRequest() {
+		this.messages = new ArrayList<>();
+	}
+	
 	public ChatbotRequest(String model, String prompt) {
 		this.model = model;
 		this.messages = new ArrayList<>();
@@ -27,8 +31,8 @@ public class ChatbotRequest {
 		return messages;
 	}
 
-	public void setMessages(List<Message> messages) {
-		this.messages = messages;
+	public void setMessages(Message messages) {
+		this.messages.add(messages);
 	}
 
 	public double getTemperature() {
