@@ -20,33 +20,5 @@
 	    LEFT JOIN sport_team at ON ms.awayteam_id = at.team_id
 	    WHERE ft.user_id = #{userId}
     </select>
- 	 	
- 	<insert id="insertMatchSchedule" parameterType="MatchSchedule">
-        INSERT INTO match_schedule (match_id, sport_name, date, time, home_team_id, away_team_id, location)
-        VALUES (#{matchId}, #{sportName}, #{date}, #{time}, #{homeTeamId}, #{awayTeamId}, #{location})
-    </insert>
-
-    <update id="updateMatchSchedule" parameterType="MatchSchedule">
-        UPDATE match_schedule
-        SET sport_name = #{sportName},
-            date = #{date},
-            time = #{time},
-            home_team_id = #{homeTeamId},
-            away_team_id = #{awayTeamId},
-            location = #{location}
-        WHERE match_id = #{matchId}
-    </update>
-
-    <delete id="deleteMatchSchedule" parameterType="int">
-        DELETE FROM match_schedule
-        WHERE match_id = #{matchId}
-    </delete>
- 	
- 	<select id="getMatchesByTime" resultType="MatchSchedule">
-		SELECT *
-		FROM match_schedule
-		WHERE CONCAT(date, ' ', time) BETWEEN #{start} AND #{end};                                                                                                                                         = #{time}
- 	</select>
- 	
- 	
+    
  </mapper>
