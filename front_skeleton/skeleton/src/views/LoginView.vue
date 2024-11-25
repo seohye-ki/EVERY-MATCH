@@ -53,6 +53,8 @@ const login = async () => {
   } catch (error) {
     // 에러 상태에 따른 처리
     if (error.response && error.response.status === 401) {
+      id.value = ""
+      pw.value = ""
       await showAlert(
         "로그인 실패",
         "아이디 또는 비밀번호가 잘못되었습니다.",
