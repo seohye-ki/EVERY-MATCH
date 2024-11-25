@@ -43,10 +43,9 @@
     </delete>
  	
  	<select id="getMatchesByTime" resultType="MatchSchedule">
- 		SELECT *
- 		FROM match_schedule
- 		WHERE date = DATE(#{time})
- 			AND time = TIME(#{time})                                                                                                                                                                                         = #{time}
+		SELECT *
+		FROM match_schedule
+		WHERE CONCAT(date, ' ', time) BETWEEN #{start} AND #{end};                                                                                                                                         = #{time}
  	</select>
  	
  	

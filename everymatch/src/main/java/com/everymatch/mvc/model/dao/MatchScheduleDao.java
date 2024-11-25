@@ -15,6 +15,6 @@ public interface MatchScheduleDao {
 	
 	int deleteMatchSchedule(int matchId);
 	
-	List<MatchSchedule> getMatchesByTime(LocalDateTime time);
+	List<MatchSchedule> getMatchesByTime(LocalDateTime start, LocalDateTime end);
 	
 }

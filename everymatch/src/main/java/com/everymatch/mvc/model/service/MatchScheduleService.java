@@ -8,6 +8,4 @@ import com.everymatch.mvc.model.dto.MatchSchedule;
 public interface MatchScheduleService {
 
 	List<MatchSchedule> getMatchScheduleByUserId(String userId);
-
-	List<MatchSchedule> getMatchesByTime(LocalDateTime time);
 }
