@@ -14,7 +14,7 @@ public interface UserService {
 	public User getUserDetails(String userId);
 	
 	//회원 정보 수정
-	public void updateUser(String userId, String nickname, String email);
+	public void updateUser(String userId, String nickname, String email, String userImg);
 	
 	//임시 비밀번호 발급
 	public boolean resetPassword(String userId, String email);

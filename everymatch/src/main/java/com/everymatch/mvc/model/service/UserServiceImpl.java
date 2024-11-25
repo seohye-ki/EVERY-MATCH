@@ -43,10 +43,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateUser(String userId, String nickname, String email) {
+	public void updateUser(String userId, String nickname, String email, String userImg) {
         User user = userDao.getUserById(userId);
 		user.setEmail(email);
         user.setNickname(nickname);
+        user.setUserImg(userImg);
         userDao.updateUser(user);
 	}
 

@@ -43,6 +43,9 @@ const ment = [
   '님, 오늘의 경기는 진짜 "레전드"가 될 준비가 되었어요! 기대해 주세요! 😆',
 ];
 
+const img = ref('')
+img.value = sessionStorage.getItem("userImg")
+
 const select = ment[Math.floor(Math.random() * ment.length)];
 
 onBeforeMount(async () => {
@@ -141,8 +144,8 @@ const goToChat = () => {
     <main class="content-container">
       <!-- 왼쪽 사이드 메뉴 -->
       <div class="menu">
-        <div class="user-img">
-          <img src="@/assets/icons/user.png" alt="userImg" class="user" />
+        <div class="avatar">
+          <img :src="'/src/assets/imgs/' + img" alt="userImg"/>
         </div>
         <div class="left-menu">
           <div class="menu-item">
@@ -226,6 +229,7 @@ const goToChat = () => {
 .logo {
   width: 230px;
 }
+
 
 /* 콘텐츠 컨테이너 */
 .content-container {
@@ -436,5 +440,19 @@ const goToChat = () => {
 }
 .fc-button {
   box-shadow: none !important;
+}
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+.avatar img {
+  max-width: 80px;
+  max-width: 80px;
+  border-radius: 0%;
 }
 </style>

@@ -24,6 +24,9 @@ const useRout = useRouter();
 const userId = ref('');
 const nickname = ref('');
 const email = ref('');
+const img = ref('');
+const favoriteTeams = ref([]);
+const isModalOpen = ref(false);
 
 // 사용자 정보 불러오기
 onMounted(async () => {
@@ -35,9 +38,13 @@ onMounted(async () => {
       useRout.push("/")
     } else {
       const response = await api.get('/user');
+      console.log(response.data)
       userId.value = response.data.userId;
       nickname.value = response.data.nickname;
       email.value = response.data.email;
+      img.value = response.data.userImg;
+      const favorite = await api.get("/favorite");
+      favoriteTeams.value = favorite.data.favoriteTeams;
     }
   } catch (error) {
     console.error('Failed to fetch user data:', error);
@@ -50,10 +57,12 @@ const changeInfo = async () => {
     const form = new FormData()
     form.append('nickname', nickname.value)
     form.append('email', email.value)
+    form.append('userImg', img.value)
     const response = await api.put('/user', form);
 
     if (response.status === 200) {
 	  sessionStorage.setItem("nickname", nickname.value);
+    sessionStorage.setItem("userImg", img.value);
 	  await showAlert('정보가 성공적으로 수정되었습니다.');
       useRout.push('/main');
     }
@@ -86,6 +95,24 @@ const deleteAccount = async () => {
     }
   }
 };
+
+const selectTeamImage = (teamImg) => {
+  img.value = teamImg; // 선택한 팀 이미지를 프로필 이미지로 설정
+  isModalOpen.value = false; // 모달 닫기
+};
+
+const openModal = () => {
+  if (favoriteTeams.value.length === 0) {
+    alert("좋아하는 팀이 없습니다!")
+  } else {
+    isModalOpen.value = true;
+  }
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
 </script>
 <template>
 	<div class="mypage-container">
@@ -98,9 +125,12 @@ const deleteAccount = async () => {
 	  <div class="content">
 		<!-- 왼쪽 섹션 -->
 		<div class="left-section">
-		  <div class="avatar">
-			<img src="/src/assets/icons/user.png" alt="User Avatar" />
-		  </div>
+      <div class="change-con">
+        <div class="avatar">
+        <img :src="'/src/assets/imgs/' + img" alt="User Avatar" />
+        </div>
+        <button class="delete-account-button" @click="openModal">팀 이미지 선택</button>
+      </div>
 		  <button class="delete-account-button" @click="deleteAccount">회원탈퇴</button>
 		</div>
   
@@ -123,8 +153,7 @@ const deleteAccount = async () => {
 		  </div>
 		  <button class="change-password-button" @click="changePW">
 			비밀번호 변경
-		  </button>
-  
+		  </button>  
 		  <!-- 버튼 그룹 -->
 		  <div class="button-group">
 			<button class="cancel-button" @click="cancel">X 닫기</button>
@@ -132,6 +161,20 @@ const deleteAccount = async () => {
 		  </div>
 		</div>
 	  </div>
+    <div v-if="isModalOpen" class="modal-wrap">
+      <div class="modal-container">
+        <span class="close" @click="closeModal">&times;</span>
+        <h3>팀 이미지를 선택하세요</h3>
+        <div class="team-images">
+          <div v-for="team in favoriteTeams" :key="team.id" class="team-image">
+            <img :src="'/src/assets/imgs/' + team.teamLogo"
+             alt="Team Image" @click="selectTeamImage(team.teamLogo)"
+             style="object-fit: contain; max-width: 80px; max-height: 80px;"
+             />
+          </div>
+        </div>
+      </div>
+    </div>
 	</div>
 </template>
 
@@ -180,12 +223,13 @@ const deleteAccount = async () => {
   align-items: center;
   justify-content: space-between;
 }
-
+.avatar {
+  margin-bottom: 20px;
+}
 .avatar img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #ffffff;
+  max-width: 80px;
+  max-width: 80px;
+  border-radius: 0%;
 }
 
 .delete-account-button {
@@ -307,4 +351,35 @@ input#userId {
 .change-password-button:hover {
   background-color: #e0e0e0;
 }
+.modal-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+/* modal or popup */
+.modal-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.change-con {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.team-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
 </style>
