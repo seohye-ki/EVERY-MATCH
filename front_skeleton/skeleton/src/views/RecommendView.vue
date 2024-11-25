@@ -102,7 +102,9 @@ const showResult = async () => {
       sessionStorage.clear()
       useRou.push("/")
     } else {
-      const response = await api.post("/chat/team", answerMessage.value);
+      const form = new FormData()
+      form.append("prompt", answerMessage.value)
+      const response = await api.post("/chat/team", form);
       if (response.status === 200) {
         setTimeout(() => {
           resultMessage.value = response.data;
