@@ -97,22 +97,28 @@ onMounted(() => {
 
         <!-- Right Section: Input and Buttons -->
         <div class="right-section">
-          <div class="input-section">
-            <label for="id">아이디를 입력하세요!</label>
-            <p>아이디는 나중에 변경할 수 없어요.</p>
-            <input
-              id="id"
-              v-model="id"
-              type="text"
-              placeholder="아이디를 입력하세요"
-            />
-          </div>
+          <form @submit.prevent="nextStep">
+            <div class="input-section">
+              <label for="id">아이디를 입력하세요!</label>
+              <p>아이디는 나중에 변경할 수 없어요.</p>
+              <input
+                id="id"
+                v-model="id"
+                type="text"
+                placeholder="아이디를 입력하세요"
+              />
+            </div>
 
-          <!-- Navigation Buttons -->
-          <div class="button-group">
-            <button class="prev-button" @click="prevStep">&lt; 이전</button>
-            <button class="next-button" @click="nextStep">다음</button>
-          </div>
+            <!-- Navigation Buttons -->
+            <div class="button-group">
+              <button class="prev-button" @click="prevStep" type="button">
+                &lt; 이전
+              </button>
+              <button class="next-button" @click="nextStep" type="submit">
+                다음
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

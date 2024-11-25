@@ -1,24 +1,28 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/counter'
-import { ref, onMounted } from 'vue'
-import showAlert from '@/utils/swal'
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/counter";
+import { ref, onMounted } from "vue";
+import showAlert from "@/utils/swal";
 
-const router = useRouter()
-const userStore = useUserStore()
+const router = useRouter();
+const userStore = useUserStore();
 
-const nickname = ref('')
+const nickname = ref("");
 
 const nextStep = () => {
-	if (!nickname.value.trim()) {
-		showAlert('닉네임을 입력해주세요', '닉네임을 반드시 입력해야 합니다.', 'error')
-        return
-    }
-    userStore.setNickname(nickname.value)
-    router.push('/regist/id')  
-}
+  if (!nickname.value.trim()) {
+    showAlert(
+      "닉네임을 입력해주세요",
+      "닉네임을 반드시 입력해야 합니다.",
+      "error"
+    );
+    return;
+  }
+  userStore.setNickname(nickname.value);
+  router.push("/regist/id");
+};
 
-const progressWidth = ref(0)
+const progressWidth = ref(0);
 
 onMounted(() => {
   let progress = 0;
@@ -34,39 +38,46 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="container-fluid">
-		<!-- Progress Bar -->
-	  <div class="progress-container">
-		<div class="progress-text">1 / 4</div>
-		<div class="progress-bar">
-		  <div class="progress-fill" :style="{ width: progressWidth + '%' }"></div>
-		</div>
-	  </div>
+  <div class="container-fluid">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-text">1 / 4</div>
+      <div class="progress-bar">
+        <div
+          class="progress-fill"
+          :style="{ width: progressWidth + '%' }"
+        ></div>
+      </div>
+    </div>
 
-	  <!-- Form Content -->
-	  <div class="card">
-		<div class="form-content">
-		  <div class="left-section">
-            <img src="@/assets/small.png" alt="icon" class="icon" />
-            <h2>EVERY MATCH 계정 만들기</h2>
-          </div>
-  
-		<!-- Input and Button in Horizontal Layout -->
-		<div class="right-section">
-			<div class="input-section">
-				<label for="nickname">앞으로 이렇게 불러주세요!</label>
-				<input
-				id="nickname"
-				v-model="nickname"
-				type="text"
-				placeholder="닉네임을 입력하세요"
-				/>
-			</div>
-		    	<button @click="nextStep" class="next-button">다음</button>
-			</div>
-		</div>
-	  </div>
-	</div>
+    <!-- Form Content -->
+    <div class="card">
+      <div class="form-content">
+        <div class="left-section">
+          <img src="@/assets/small.png" alt="icon" class="icon" />
+          <h2>EVERY MATCH 계정 만들기</h2>
+        </div>
+
+        <!-- Input and Button in Horizontal Layout -->
+        <div class="right-section">
+          <form @submit.prevent="nextStep">
+            <div class="input-section">
+              <label for="nickname">앞으로 이렇게 불러주세요!</label>
+              <input
+                id="nickname"
+                v-model="nickname"
+                type="text"
+                placeholder="닉네임을 입력하세요"
+              />
+            </div>
+            <button @click="nextStep" class="next-button" type="submit">
+              다음
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

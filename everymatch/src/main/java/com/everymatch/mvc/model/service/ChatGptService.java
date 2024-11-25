@@ -25,7 +25,7 @@ public class ChatGptService {
 	
     public String getChatGptResponse(String prompt, String userId) throws Exception {
 
-    	if (this.userId != userId) {
+    	if (!userId.equals(this.userId)) {
     		this.userId = userId;
     		chatbotRequest = new ChatbotRequest();
     		chatbotRequest.setModel("gpt-4o-mini");

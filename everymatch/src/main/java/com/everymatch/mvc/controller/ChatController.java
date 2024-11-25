@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.everymatch.mvc.model.service.ChatGptService;
@@ -28,7 +29,7 @@ public class ChatController {
 	}
 
     @PostMapping("/ask")
-    public String askChatGpt(@RequestHeader("Authorization") String token, @RequestBody String prompt) {
+    public String askChatGpt(@RequestHeader("Authorization") String token, @RequestParam String prompt) {
         try {
             String userId = extractUserIdFromToken(token);
         	System.out.println(prompt);
@@ -44,7 +45,7 @@ public class ChatController {
     }
     
     @PostMapping("/team")
-    public String askTeam(@RequestBody String prompt) {
+    public String askTeam(@RequestParam String prompt) {
         try {
         	System.out.println(prompt);
         	String ques = URLDecoder.decode(prompt, StandardCharsets.UTF_8.name());

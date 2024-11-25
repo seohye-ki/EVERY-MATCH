@@ -59,11 +59,17 @@ const deleteTeam = async (teamId) => {
   );
 };
 
-const plusTeam = async (teamId) => {
+const toggleTeamSelection = async (teamId) => {
   const teamExists = favoriteTeams.value.some((team) => team.teamId == teamId);
+
   if (!teamExists) {
     const teamToAdd = teams.value.find((team) => team.teamId === teamId);
     favoriteTeams.value.push(teamToAdd);
+  } else {
+    favoriteTeams.value.splice(
+      favoriteTeams.value.findIndex((team) => team.teamId === teamId),
+      1
+    );
   }
 };
 
@@ -185,7 +191,7 @@ const goTest = () => {
             :key="team.teamId"
             :teamId="team.teamId"
             :teamLogo="team.teamLogo"
-            @click="plusTeam(team.teamId)"
+            @click="toggleTeamSelection(team.teamId)"
             :class="{
               selected: favoriteTeams.some((fav) => fav.teamId === team.teamId),
             }"
@@ -205,7 +211,7 @@ const goTest = () => {
             v-for="team in favoriteTeams"
             :key="team.teamId"
           >
-            <span>{{ team.teamName }}</span>
+            <span>[{{ team.sportName }}] {{ team.teamName }}</span>
             <button @click="deleteTeam(team.teamId)" class="delete-button">
               ×
             </button>

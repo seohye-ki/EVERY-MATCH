@@ -1,18 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
 import showAlert from "@/utils/swal";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: "http://localhost:8080/api",
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('Authorization');
+    const token = sessionStorage.getItem("Authorization");
     if (token) {
-      config.headers['Authorization'] = `${token}`;
+      config.headers["Authorization"] = `${token}`;
     }
     return config;
   },
@@ -21,6 +21,7 @@ api.interceptors.request.use(
 
 const useRout = useRouter();
 
+
 const userId = ref('');
 const nickname = ref('');
 const email = ref('');
@@ -28,17 +29,17 @@ const img = ref('');
 const favoriteTeams = ref([]);
 const isModalOpen = ref(false);
 
+
 // 사용자 정보 불러오기
 onMounted(async () => {
   try {
-    const expiry = sessionStorage.getItem("expiry")
-    const currentTime = new Date().getTime()
+    const expiry = sessionStorage.getItem("expiry");
+    const currentTime = new Date().getTime();
     if (currentTime > expiry) {
-      sessionStorage.clear()
-      useRout.push("/")
+      sessionStorage.clear();
+      useRout.push("/");
     } else {
-      const response = await api.get('/user');
-      console.log(response.data)
+      const response = await api.get("/user");
       userId.value = response.data.userId;
       nickname.value = response.data.nickname;
       email.value = response.data.email;
@@ -47,13 +48,14 @@ onMounted(async () => {
       favoriteTeams.value = favorite.data.favoriteTeams;
     }
   } catch (error) {
-    console.error('Failed to fetch user data:', error);
+    console.error("Failed to fetch user data:", error);
   }
 });
 
 // 정보 수정
 const changeInfo = async () => {
   try {
+
     const form = new FormData()
     form.append('nickname', nickname.value)
     form.append('email', email.value)
@@ -65,33 +67,34 @@ const changeInfo = async () => {
     sessionStorage.setItem("userImg", img.value);
 	  await showAlert('정보가 성공적으로 수정되었습니다.');
       useRout.push('/main');
+
     }
   } catch (error) {
-    console.error('Failed to update user data:', error);
-    await showAlert('정보 수정 중 문제가 발생했습니다.');
+    console.error("Failed to update user data:", error);
+    await showAlert("정보 수정 중 문제가 발생했습니다.");
   }
 };
 
 // 비밀번호 변경
 const changePW = () => {
-  useRout.push('./changePW');
+  useRout.push("./changePW");
 };
 
 // 취소
 const cancel = () => {
-  useRout.push('/main');
+  useRout.push("/main");
 };
 
 // 회원 탈퇴
 const deleteAccount = async () => {
-  if (confirm('정말로 회원 탈퇴를 진행하시겠습니까?')) {
+  if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
     try {
-      await api.delete('/user/delete');
-      await showAlert('회원 탈퇴가 완료되었습니다.');
-      useRout.push('/login');
+      await api.delete("/user/delete");
+      await showAlert("회원 탈퇴가 완료되었습니다.");
+      useRout.push("/login");
     } catch (error) {
-      console.error('Failed to delete user:', error);
-      await showAlert('회원 탈퇴 중 문제가 발생했습니다.');
+      console.error("Failed to delete user:", error);
+      await showAlert("회원 탈퇴 중 문제가 발생했습니다.");
     }
   }
 };
@@ -288,10 +291,10 @@ input {
 }
 
 input#userId {
-  background-color: #f0f0f0; 
-  border: 1px solid #ddd; 
-  color: #888; 
-  cursor: not-allowed; 
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #888;
+  cursor: not-allowed;
 }
 
 /* 버튼 그룹 */
@@ -344,7 +347,7 @@ input#userId {
   border: 1px solid #555;
   border-radius: 6px;
   cursor: pointer;
-  width: 120px;
+  width: 140px;
   transition: background-color 0.3s ease;
 }
 
@@ -381,5 +384,5 @@ input#userId {
   flex-wrap: wrap;
   gap: 20px;
 }
-
 </style>
+

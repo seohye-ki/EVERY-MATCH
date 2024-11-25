@@ -110,24 +110,30 @@ onMounted(() => {
 
         <!-- Right Section: Input and Buttons -->
         <div class="right-section">
-          <div class="input-section">
-            <label for="email">
-              <span class="alert-icon">🔔</span> 경기 시작 1시간 전에 알림을
-              보내드릴게요
-            </label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              placeholder="이메일을 입력하세요"
-            />
-          </div>
+          <form @submit.prevent="nextStep">
+            <div class="input-section">
+              <label for="email">
+                <span class="alert-icon">🔔</span> 경기 시작 1시간 전에 알림을
+                보내드릴게요
+              </label>
+              <input
+                id="email"
+                v-model="email"
+                type="email"
+                placeholder="이메일을 입력하세요"
+              />
+            </div>
 
-          <!-- Navigation Buttons -->
-          <div class="button-group">
-            <button class="prev-button" @click="prevStep">&lt; 이전</button>
-            <button class="next-button" @click="nextStep">완료</button>
-          </div>
+            <!-- Navigation Buttons -->
+            <div class="button-group">
+              <button class="prev-button" @click="prevStep" type="button">
+                &lt; 이전
+              </button>
+              <button class="next-button" @click="nextStep" type="submit">
+                완료
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
