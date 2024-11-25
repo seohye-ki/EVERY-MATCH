@@ -30,16 +30,16 @@ api.interceptors.request.use(
 
 onBeforeMount(async () => {
   try {
-    const expiry = sessionStorage.getItem("expiry")
-    const currentTime = new Date().getTime()
+    const expiry = sessionStorage.getItem("expiry");
+    const currentTime = new Date().getTime();
     if (currentTime > expiry) {
-      sessionStorage.clear()
-      useRout.push("/")
+      sessionStorage.clear();
+      useRout.push("/");
     } else {
-    const response = await api.get("/favorite");
-    teams.value = response.data.allTeams;
-    showTeams.value = teams.value.filter((team) => team.sportName === "야구");
-    favoriteTeams.value = response.data.favoriteTeams;
+      const response = await api.get("/favorite");
+      teams.value = response.data.allTeams;
+      showTeams.value = teams.value.filter((team) => team.sportName === "야구");
+      favoriteTeams.value = response.data.favoriteTeams;
     }
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -50,7 +50,7 @@ onBeforeMount(async () => {
 const useRout = useRouter();
 const teams = ref();
 const showTeams = ref();
-const favoriteTeams = ref();
+const favoriteTeams = ref([]);
 
 const deleteTeam = async (teamId) => {
   favoriteTeams.value.splice(

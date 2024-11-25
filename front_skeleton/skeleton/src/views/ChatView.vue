@@ -26,18 +26,28 @@ const useRou = useRouter();
 // 메시지 전송 로직
 const sendMessage = async () => {
   if (newMessage.value.trim() === "") return; // 빈 메시지는 무시
-  const message = { answer: false, sender: nickname, text: newMessage.value, timestamp: new Date().getTime() };
+  const message = {
+    answer: false,
+    sender: nickname,
+    text: newMessage.value,
+    timestamp: new Date().getTime(),
+  };
   try {
-    const expiry = sessionStorage.getItem("expiry")
-    const currentTime = new Date().getTime()
+    const expiry = sessionStorage.getItem("expiry");
+    const currentTime = new Date().getTime();
     if (currentTime > expiry) {
-      sessionStorage.clear()
-      useRou.push("/")
+      sessionStorage.clear();
+      useRou.push("/");
     } else {
-      const response = await api.post("/chat/ask", message); // 가상의 API
+      const response = await api.post("/chat/ask", message.text); // 가상의 API
       if (response.status === 200) {
-        console.log(response)
-        const resMessage = { answer: true, sender: "파트너", text: response.data, timestamp: new Date().getTime() };
+        console.log(response);
+        const resMessage = {
+          answer: true,
+          sender: "파트너",
+          text: response.data,
+          timestamp: new Date().getTime(),
+        };
         messages.value.push(message); // 성공 시 메시지 추가
         messages.value.push(resMessage);
         newMessage.value = ""; // 입력창 초기화
@@ -57,9 +67,8 @@ const goMain = () => {
   useRou.push("/");
 };
 const updateMessage = (event) => {
-      newMessage.value = event.target.value;
-}
-
+  newMessage.value = event.target.value;
+};
 </script>
 
 <template>
@@ -112,7 +121,7 @@ const updateMessage = (event) => {
 
       <!-- 채팅 섹션 -->
       <div class="chat-section">
-        <p>
+        <p class="title">
           <span>{{ nickname }}</span
           >님! 무엇이 궁금하신가요?🤔
         </p>
@@ -123,10 +132,21 @@ const updateMessage = (event) => {
             v-for="(message, index) in messages"
             :key="index"
             class="message"
+            :class="{ 'answer-message': message.answer === true }"
           >
-            <p class="sender">{{ message.sender }}</p>
-            <p class="text">{{ message.text }}</p>
-            <p class="timestamp">
+            <p
+              class="sender"
+              :class="{ 'answer-sender': message.answer === true }"
+            >
+              {{ message.sender }}
+            </p>
+            <p class="text" :class="{ 'answer-text': message.answer === true }">
+              {{ message.text }}
+            </p>
+            <p
+              class="timestamp"
+              :class="{ 'answer-timestamp': message.answer === true }"
+            >
               {{ new Date(message.timestamp).toLocaleTimeString() }}
             </p>
           </div>
@@ -237,7 +257,7 @@ span {
   font-weight: bold;
 }
 
-p {
+.title {
   display: inline-block;
   border-radius: 12px;
   border: #de7268 solid 2px;
@@ -254,12 +274,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.chat-section p {
-  font-size: 18px;
-  margin-bottom: 20px;
-  color: #333;
+  height: calc(100vh - 150px);
 }
 
 /* 채팅 메시지 리스트 */
@@ -267,6 +282,7 @@ p {
   flex-grow: 1;
   overflow-y: auto;
   margin-bottom: 20px;
+  padding-right: 15px;
 }
 
 .message {
@@ -280,12 +296,52 @@ p {
 
 .text {
   margin: 5px 0;
-  color: #333;
+  background-color: #de7268;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 12px;
+  width: 80%;
 }
 
 .timestamp {
   font-size: 12px;
   color: #999;
+  margin: 5px 0;
+  text-align: right;
+  width: 80%;
+}
+
+.answer-message {
+  text-align: right;
+}
+
+.answer-sender {
+  text-align: right;
+}
+
+.answer-text {
+  background-color: #ffffff;
+  border: #de7268 solid 2px;
+  color: #666;
+  margin-left: auto;
+}
+
+.answer-timestamp {
+  text-align: left;
+  margin-left: auto;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: #de7268;
+  border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
 }
 
 /* 채팅 입력창 */
