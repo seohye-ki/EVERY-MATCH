@@ -21,9 +21,14 @@ api.interceptors.request.use(
 
 const useRout = useRouter();
 
-const userId = ref("");
-const nickname = ref("");
-const email = ref("");
+
+const userId = ref('');
+const nickname = ref('');
+const email = ref('');
+const img = ref('');
+const favoriteTeams = ref([]);
+const isModalOpen = ref(false);
+
 
 // 사용자 정보 불러오기
 onMounted(async () => {
@@ -38,6 +43,9 @@ onMounted(async () => {
       userId.value = response.data.userId;
       nickname.value = response.data.nickname;
       email.value = response.data.email;
+      img.value = response.data.userImg;
+      const favorite = await api.get("/favorite");
+      favoriteTeams.value = favorite.data.favoriteTeams;
     }
   } catch (error) {
     console.error("Failed to fetch user data:", error);
@@ -47,15 +55,19 @@ onMounted(async () => {
 // 정보 수정
 const changeInfo = async () => {
   try {
-    const form = new FormData();
-    form.append("nickname", nickname.value);
-    form.append("email", email.value);
-    const response = await api.put("/user", form);
+
+    const form = new FormData()
+    form.append('nickname', nickname.value)
+    form.append('email', email.value)
+    form.append('userImg', img.value)
+    const response = await api.put('/user', form);
 
     if (response.status === 200) {
-      sessionStorage.setItem("nickname", nickname.value);
-      await showAlert("정보가 성공적으로 수정되었습니다.");
-      useRout.push("/main");
+	  sessionStorage.setItem("nickname", nickname.value);
+    sessionStorage.setItem("userImg", img.value);
+	  await showAlert('정보가 성공적으로 수정되었습니다.');
+      useRout.push('/main');
+
     }
   } catch (error) {
     console.error("Failed to update user data:", error);
@@ -86,64 +98,87 @@ const deleteAccount = async () => {
     }
   }
 };
+
+const selectTeamImage = (teamImg) => {
+  img.value = teamImg; // 선택한 팀 이미지를 프로필 이미지로 설정
+  isModalOpen.value = false; // 모달 닫기
+};
+
+const openModal = () => {
+  if (favoriteTeams.value.length === 0) {
+    alert("좋아하는 팀이 없습니다!")
+  } else {
+    isModalOpen.value = true;
+  }
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
 </script>
 <template>
-  <div class="mypage-container">
-    <!-- 로고 -->
-    <header class="header">
-      <img
-        src="/src/assets/EVERYMATCH.png"
-        alt="EVERYMATCH Logo"
-        class="logo"
-      />
-    </header>
-
-    <!-- 마이페이지 컨텐츠 -->
-    <div class="content">
-      <!-- 왼쪽 섹션 -->
-      <div class="left-section">
+	<div class="mypage-container">
+	  <!-- 로고 -->
+	  <header class="header">
+		<img src="/src/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
+	  </header>
+  
+	  <!-- 마이페이지 컨텐츠 -->
+	  <div class="content">
+		<!-- 왼쪽 섹션 -->
+		<div class="left-section">
+      <div class="change-con">
         <div class="avatar">
-          <img src="/src/assets/icons/user.png" alt="User Avatar" />
+        <img :src="'/src/assets/imgs/' + img" alt="User Avatar" />
         </div>
-        <button class="delete-account-button" @click="deleteAccount">
-          회원탈퇴
-        </button>
+        <button class="delete-account-button" @click="openModal">팀 이미지 선택</button>
       </div>
-
-      <!-- 오른쪽 섹션 -->
-      <div class="right-section">
-        <h2 class="title">마이페이지</h2>
-
-        <!-- 사용자 정보 -->
-        <div class="form-group">
-          <label for="userId">ID</label>
-          <input id="userId" type="text" :value="userId" readonly />
-        </div>
-        <div class="form-group">
-          <label for="nickname">Nickname</label>
-          <input
-            id="nickname"
-            :value="nickname"
-            @input="(event) => (nickname = event.target.value)"
-            type="text"
-          />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" />
-        </div>
-        <button class="change-password-button" @click="changePW">
-          비밀번호 변경
-        </button>
-
-        <!-- 버튼 그룹 -->
-        <div class="button-group">
-          <button class="cancel-button" @click="cancel">X 닫기</button>
-          <button class="update-button" @click="changeInfo">정보 수정</button>
+		  <button class="delete-account-button" @click="deleteAccount">회원탈퇴</button>
+		</div>
+  
+		<!-- 오른쪽 섹션 -->
+		<div class="right-section">
+		  <h2 class="title">마이페이지</h2>
+  
+		  <!-- 사용자 정보 -->
+		  <div class="form-group">
+			<label for="userId">ID</label>
+			<input id="userId" type="text" :value="userId" readonly />
+		  </div>
+		  <div class="form-group">
+			<label for="nickname">Nickname</label>
+			<input id="nickname" :value="nickname" @input="(event) => (nickname = event.target.value)" type="text" />
+		  </div>
+		  <div class="form-group">
+			<label for="email">Email</label>
+			<input id="email" v-model="email" type="email" />
+		  </div>
+		  <button class="change-password-button" @click="changePW">
+			비밀번호 변경
+		  </button>  
+		  <!-- 버튼 그룹 -->
+		  <div class="button-group">
+			<button class="cancel-button" @click="cancel">X 닫기</button>
+			<button class="update-button" @click="changeInfo">정보 수정</button>
+		  </div>
+		</div>
+	  </div>
+    <div v-if="isModalOpen" class="modal-wrap">
+      <div class="modal-container">
+        <span class="close" @click="closeModal">&times;</span>
+        <h3>팀 이미지를 선택하세요</h3>
+        <div class="team-images">
+          <div v-for="team in favoriteTeams" :key="team.id" class="team-image">
+            <img :src="'/src/assets/imgs/' + team.teamLogo"
+             alt="Team Image" @click="selectTeamImage(team.teamLogo)"
+             style="object-fit: contain; max-width: 80px; max-height: 80px;"
+             />
+          </div>
         </div>
       </div>
     </div>
-  </div>
+	</div>
 </template>
 
 <style scoped>
@@ -191,10 +226,13 @@ const deleteAccount = async () => {
   align-items: center;
   justify-content: space-between;
 }
-
+.avatar {
+  margin-bottom: 20px;
+}
 .avatar img {
-  width: 120px;
-  height: 120px;
+  max-width: 80px;
+  max-width: 80px;
+  border-radius: 0%;
 }
 
 .delete-account-button {
@@ -316,4 +354,35 @@ input#userId {
 .change-password-button:hover {
   background-color: #e0e0e0;
 }
+.modal-wrap {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+/* modal or popup */
+.modal-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.change-con {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.team-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 </style>
+

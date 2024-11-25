@@ -67,6 +67,7 @@ public class UserController {
 			result.put("message", "로그인 성공");
 			result.put("access-token", jwtUtil.createToken("userId", userId));
 			result.put("nickname", userService.getUserDetails(userId).getNickname());
+			result.put("userImg", userService.getUserDetails(userId).getUserImg());
 			return new ResponseEntity<>(result, HttpStatus.OK);
 		}
 		else
@@ -90,12 +91,12 @@ public class UserController {
 	// 회원정보 수정
 	@PutMapping
 	public ResponseEntity<String> updateUser(@RequestHeader("Authorization") String token,
-			@RequestParam String nickname, @RequestParam String email) {
+			@RequestParam String nickname, @RequestParam String email, @RequestParam String userImg) {
 		String userId = extractUserIdFromToken(token);
 		String userEmail = userService.getUserDetails(userId).getEmail();
 		if (nickname == null || email == null || ( !userEmail.equals(email) && userService.isDuplicateEmail(email)))
 			return new ResponseEntity<>("변경불가", HttpStatus.BAD_REQUEST);
-		userService.updateUser(userId, nickname, email);
+		userService.updateUser(userId, nickname, email, userImg);
 		return new ResponseEntity<>("업데이트 성공", HttpStatus.OK);
 	}
 

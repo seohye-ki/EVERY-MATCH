@@ -45,6 +45,7 @@ const login = async () => {
       // JWT 토큰 저장
       sessionStorage.setItem("Authorization", response.data["access-token"]);
       sessionStorage.setItem("nickname", response.data["nickname"]);
+      sessionStorage.setItem("userImg", response.data["userImg"]);
       sessionStorage.setItem("expiry", new Date().getTime() + 3600000 )
 
       // 메인 페이지로 이동
