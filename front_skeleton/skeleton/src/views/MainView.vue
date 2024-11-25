@@ -59,7 +59,7 @@ onBeforeMount(async () => {
         events.value = response.data;
         matchs.value = events.value.filter(
           (event) => event.date === selectedDate.value
-        );
+        )
       }
 
       can.value = true;
@@ -80,12 +80,13 @@ const calendarOptions = ref({
     const eventCount = getEventCount(formatDate(info.date));
     // 색상의 강도를 이벤트 개수에 따라 조정
     let color = `rgba(0, 0, 0, 0)`;
-
     if (eventCount > 0) {
       const intensity = Math.min(eventCount * 0.2, 1); // 이벤트 개수에 따라 색의 진하기
       color = `rgba(255, 99, 132, ${intensity})`;
+    } 
+    if (formatDate(info.date) === formatDate(new Date())) {
+      color = `rgba(237, 233, 157, 1)`
     }
-
     info.el.style.backgroundColor = color;
   },
   dateClick: (info) => {
@@ -94,8 +95,14 @@ const calendarOptions = ref({
 });
 
 watch(selectedDate, (newSelectedDate) => {
-  matchs.value = events.value.filter((event) => event.date === newSelectedDate);
-  useRou.push("");
+  matchs.value = events.value.filter((event) => event.date === newSelectedDate).sort((a, b) => {
+          if (a.time.slice(0, 2) - b.time.slice(0, 2) != 0) 
+          {
+            return a.time.slice(0, 2) - b.time.slice(0, 2)
+          } else {
+            return a.time.slice(3, 5) - b.time.slice(3, 5)
+          }
+          });
 });
 
 // 날짜별 이벤트 개수를 반환하는 메소드
