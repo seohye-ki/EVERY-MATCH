@@ -39,7 +39,9 @@ const sendMessage = async () => {
       sessionStorage.clear();
       useRou.push("/");
     } else {
-      const response = await api.post("/chat/ask", message.text); // 가상의 API
+      const form = new FormData();
+      form.append("prompt", message.text)
+      const response = await api.post("/chat/ask", form); // 가상의 API
       if (response.status === 200) {
         console.log(response);
         const resMessage = {
