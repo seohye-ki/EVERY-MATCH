@@ -29,9 +29,7 @@ api.interceptors.request.use(
   }
 );
 
-const events = ref([
-  {}
-]);
+const events = ref([{}]);
 
 const can = ref(false);
 const selectedDate = ref();
@@ -39,31 +37,31 @@ const nickname = sessionStorage.getItem("nickname");
 const matchs = ref();
 const useRou = useRouter();
 const ment = [
-  '님! 오늘도 멋진 경기들이 기다리고 있어요! 🔥',
-  '님! 오늘의 경기를 놓치지 마세요! ⚾️',
-  '님, 오늘 경기장은 뜨거울 준비가 완료되었습니다. 함께 달려볼까요? 🏃‍♂️🔥',
+  "님! 오늘도 멋진 경기들이 기다리고 있어요! 🔥",
+  "님! 오늘의 경기를 놓치지 마세요! ⚾️",
+  "님, 오늘 경기장은 뜨거울 준비가 완료되었습니다. 함께 달려볼까요? 🏃‍♂️🔥",
   '님, 오늘의 경기는 진짜 "레전드"가 될 준비가 되었어요! 기대해 주세요! 😆',
-]
+];
 
-const select = ment[Math.floor(Math.random()*ment.length)]
+const select = ment[Math.floor(Math.random() * ment.length)];
 
 onBeforeMount(async () => {
   try {
-    const expiry = sessionStorage.getItem("expiry")
-    const currentTime = new Date().getTime()
+    const expiry = sessionStorage.getItem("expiry");
+    const currentTime = new Date().getTime();
     if (currentTime > expiry) {
-      sessionStorage.clear()
-      useRou.push("/")
+      sessionStorage.clear();
+      useRou.push("/");
     } else {
       const response = await api.get("/match/schedule");
-  
+
       if (response.data.length !== 0) {
         events.value = response.data;
         matchs.value = events.value.filter(
           (event) => event.date === selectedDate.value
         );
       }
-  
+
       can.value = true;
     }
   } catch (error) {
@@ -177,7 +175,7 @@ const goToChat = () => {
       <div class="calendar-section">
         <p>
           <span>{{ nickname }}</span>
-          {{select}}
+          {{ select }}
         </p>
         <FullCalendar v-if="can" :options="calendarOptions" />
       </div>
@@ -385,7 +383,7 @@ const goToChat = () => {
 }
 
 .fc {
-  max-width: 1200px;
+  max-width: 1500px;
   max-height: 580px;
 }
 
@@ -418,12 +416,12 @@ const goToChat = () => {
 .fc .fc-button:hover {
   background-color: #ffffff;
   border-color: #ffffff;
-  color:black;
+  color: black;
 }
 .fc .fc-button-primary:disabled {
-    background-color: #ffffff;
-    border-color: #ffffff;
-    color: #ffffff;
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #ffffff;
 }
 .fc .fc-button-primary:focus {
   border: none;
