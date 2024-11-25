@@ -40,7 +40,7 @@ const sendMessage = async () => {
       useRou.push("/");
     } else {
       const form = new FormData();
-      form.append("prompt", message.text)
+      form.append("prompt", message.text);
       const response = await api.post("/chat/ask", form); // 가상의 API
       if (response.status === 200) {
         console.log(response);
@@ -302,15 +302,14 @@ span {
   color: #ffffff;
   padding: 10px;
   border-radius: 12px;
-  width: 80%;
+  width: fit-content;
 }
 
 .timestamp {
   font-size: 12px;
   color: #999;
   margin: 5px 0;
-  text-align: right;
-  width: 80%;
+  text-align: left;
 }
 
 .answer-message {
@@ -329,8 +328,7 @@ span {
 }
 
 .answer-timestamp {
-  text-align: left;
-  margin-left: auto;
+  text-align: right;
 }
 
 .chat-messages::-webkit-scrollbar {

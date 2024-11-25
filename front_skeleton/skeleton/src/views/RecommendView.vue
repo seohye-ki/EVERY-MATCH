@@ -23,7 +23,6 @@ api.interceptors.request.use(
 
     // config 반환 (요청을 보내기 위해)
     return config;
-    
   },
   (error) => {
     // 요청 오류 처리
@@ -96,22 +95,27 @@ const nextQuestion = (answer) => {
 const showResult = async () => {
   isLoading.value = true;
   try {
-    const expiry = sessionStorage.getItem("expiry")
-    const currentTime = new Date().getTime()
+    const expiry = sessionStorage.getItem("expiry");
+    const currentTime = new Date().getTime();
     if (currentTime > expiry) {
-      sessionStorage.clear()
-      useRou.push("/")
+      sessionStorage.clear();
+      useRou.push("/");
     } else {
-      const form = new FormData()
-      form.append("prompt", answerMessage.value)
+      const form = new FormData();
+      form.append("prompt", answerMessage.value);
       const response = await api.post("/chat/team", form);
       if (response.status === 200) {
         setTimeout(() => {
-          resultMessage.value = response.data;
+          resultMessage.value = response.data
+            .replaceAll("*", "")
+            .replaceAll(". ", ".\n")
+            .replaceAll("! ", "!\n")
+            .replaceAll(", ", ",\n")
+            .split("\n");
           console.log(resultMessage.value);
           isResultVisible.value = true;
           isLoading.value = false;
-        }, 5000);
+        }, 3000);
       } else {
         await showAlert("오류발생", "다시 시도해주세요", "error");
         isLoading.value = false;
@@ -173,7 +177,13 @@ const goBack = () => {
           </div>
           <div v-else>
             <h2>추천 결과</h2>
-            <p class="result-message">{{ resultMessage }}</p>
+            <p
+              v-for="(line, index) in resultMessage"
+              :key="index"
+              class="result-message"
+            >
+              {{ line }}
+            </p>
             <button @click="goBack">바로 팀 등록하기</button>
           </div>
         </div>
@@ -197,7 +207,7 @@ const goBack = () => {
 }
 
 .box {
-  max-width: 500px;
+  max-width: 600px;
   border-radius: 12px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
@@ -313,7 +323,7 @@ h2 {
 
 .result-message {
   font-size: 1.2rem;
-  margin: 20px 0;
+  margin: 5px 0;
   color: #333;
 }
 
@@ -324,6 +334,7 @@ button {
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 1rem;
+  margin-top: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

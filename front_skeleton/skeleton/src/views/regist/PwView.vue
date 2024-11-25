@@ -74,29 +74,35 @@ onMounted(() => {
 
         <!-- Right Section: Input and Buttons -->
         <div class="right-section">
-          <div class="input-section">
-            <label for="password"
-              >비밀번호는 보안을 위해 8자 이상이어야 합니다</label
-            >
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              placeholder="비밀번호를 입력하세요"
-            />
-            <input
-              id="confirm-password"
-              v-model="confirmPassword"
-              type="password"
-              placeholder="비밀번호 확인"
-            />
-          </div>
+          <form @submit.prevent="nextStep">
+            <div class="input-section">
+              <label for="password"
+                >비밀번호는 보안을 위해 8자 이상이어야 합니다</label
+              >
+              <input
+                id="password"
+                v-model="password"
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+              />
+              <input
+                id="confirm-password"
+                v-model="confirmPassword"
+                type="password"
+                placeholder="비밀번호 확인"
+              />
+            </div>
 
-          <!-- Navigation Buttons -->
-          <div class="button-group">
-            <button class="prev-button" @click="prevStep">&lt; 이전</button>
-            <button class="next-button" @click="nextStep">다음</button>
-          </div>
+            <!-- Navigation Buttons -->
+            <div class="button-group">
+              <button class="prev-button" @click="prevStep" type="button">
+                &lt; 이전
+              </button>
+              <button class="next-button" @click="nextStep" type="submit">
+                다음
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

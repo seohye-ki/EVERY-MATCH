@@ -1,18 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
 import showAlert from "@/utils/swal";
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: "http://localhost:8080/api",
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('Authorization');
+    const token = sessionStorage.getItem("Authorization");
     if (token) {
-      config.headers['Authorization'] = `${token}`;
+      config.headers["Authorization"] = `${token}`;
     }
     return config;
   },
@@ -21,118 +21,129 @@ api.interceptors.request.use(
 
 const useRout = useRouter();
 
-const userId = ref('');
-const nickname = ref('');
-const email = ref('');
+const userId = ref("");
+const nickname = ref("");
+const email = ref("");
 
 // 사용자 정보 불러오기
 onMounted(async () => {
   try {
-    const expiry = sessionStorage.getItem("expiry")
-    const currentTime = new Date().getTime()
+    const expiry = sessionStorage.getItem("expiry");
+    const currentTime = new Date().getTime();
     if (currentTime > expiry) {
-      sessionStorage.clear()
-      useRout.push("/")
+      sessionStorage.clear();
+      useRout.push("/");
     } else {
-      const response = await api.get('/user');
+      const response = await api.get("/user");
       userId.value = response.data.userId;
       nickname.value = response.data.nickname;
       email.value = response.data.email;
     }
   } catch (error) {
-    console.error('Failed to fetch user data:', error);
+    console.error("Failed to fetch user data:", error);
   }
 });
 
 // 정보 수정
 const changeInfo = async () => {
   try {
-    const form = new FormData()
-    form.append('nickname', nickname.value)
-    form.append('email', email.value)
-    const response = await api.put('/user', form);
+    const form = new FormData();
+    form.append("nickname", nickname.value);
+    form.append("email", email.value);
+    const response = await api.put("/user", form);
 
     if (response.status === 200) {
-	  sessionStorage.setItem("nickname", nickname.value);
-	  await showAlert('정보가 성공적으로 수정되었습니다.');
-      useRout.push('/main');
+      sessionStorage.setItem("nickname", nickname.value);
+      await showAlert("정보가 성공적으로 수정되었습니다.");
+      useRout.push("/main");
     }
   } catch (error) {
-    console.error('Failed to update user data:', error);
-    await showAlert('정보 수정 중 문제가 발생했습니다.');
+    console.error("Failed to update user data:", error);
+    await showAlert("정보 수정 중 문제가 발생했습니다.");
   }
 };
 
 // 비밀번호 변경
 const changePW = () => {
-  useRout.push('./changePW');
+  useRout.push("./changePW");
 };
 
 // 취소
 const cancel = () => {
-  useRout.push('/main');
+  useRout.push("/main");
 };
 
 // 회원 탈퇴
 const deleteAccount = async () => {
-  if (confirm('정말로 회원 탈퇴를 진행하시겠습니까?')) {
+  if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
     try {
-      await api.delete('/user/delete');
-      await showAlert('회원 탈퇴가 완료되었습니다.');
-      useRout.push('/login');
+      await api.delete("/user/delete");
+      await showAlert("회원 탈퇴가 완료되었습니다.");
+      useRout.push("/login");
     } catch (error) {
-      console.error('Failed to delete user:', error);
-      await showAlert('회원 탈퇴 중 문제가 발생했습니다.');
+      console.error("Failed to delete user:", error);
+      await showAlert("회원 탈퇴 중 문제가 발생했습니다.");
     }
   }
 };
 </script>
 <template>
-	<div class="mypage-container">
-	  <!-- 로고 -->
-	  <header class="header">
-		<img src="/src/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
-	  </header>
-  
-	  <!-- 마이페이지 컨텐츠 -->
-	  <div class="content">
-		<!-- 왼쪽 섹션 -->
-		<div class="left-section">
-		  <div class="avatar">
-			<img src="/src/assets/icons/user.png" alt="User Avatar" />
-		  </div>
-		  <button class="delete-account-button" @click="deleteAccount">회원탈퇴</button>
-		</div>
-  
-		<!-- 오른쪽 섹션 -->
-		<div class="right-section">
-		  <h2 class="title">마이페이지</h2>
-  
-		  <!-- 사용자 정보 -->
-		  <div class="form-group">
-			<label for="userId">ID</label>
-			<input id="userId" type="text" :value="userId" readonly />
-		  </div>
-		  <div class="form-group">
-			<label for="nickname">Nickname</label>
-			<input id="nickname" :value="nickname" @input="(event) => (nickname = event.target.value)" type="text" />
-		  </div>
-		  <div class="form-group">
-			<label for="email">Email</label>
-			<input id="email" v-model="email" type="email" />
-		  </div>
-		  <button class="change-password-button" @click="changePW">
-			비밀번호 변경
-		  </button>
-  
-		  <!-- 버튼 그룹 -->
-		  <div class="button-group">
-			<button class="cancel-button" @click="cancel">X 닫기</button>
-			<button class="update-button" @click="changeInfo">정보 수정</button>
-		  </div>
-		</div>
-	  </div>
-	</div>
+  <div class="mypage-container">
+    <!-- 로고 -->
+    <header class="header">
+      <img
+        src="/src/assets/EVERYMATCH.png"
+        alt="EVERYMATCH Logo"
+        class="logo"
+      />
+    </header>
+
+    <!-- 마이페이지 컨텐츠 -->
+    <div class="content">
+      <!-- 왼쪽 섹션 -->
+      <div class="left-section">
+        <div class="avatar">
+          <img src="/src/assets/icons/user.png" alt="User Avatar" />
+        </div>
+        <button class="delete-account-button" @click="deleteAccount">
+          회원탈퇴
+        </button>
+      </div>
+
+      <!-- 오른쪽 섹션 -->
+      <div class="right-section">
+        <h2 class="title">마이페이지</h2>
+
+        <!-- 사용자 정보 -->
+        <div class="form-group">
+          <label for="userId">ID</label>
+          <input id="userId" type="text" :value="userId" readonly />
+        </div>
+        <div class="form-group">
+          <label for="nickname">Nickname</label>
+          <input
+            id="nickname"
+            :value="nickname"
+            @input="(event) => (nickname = event.target.value)"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" v-model="email" type="email" />
+        </div>
+        <button class="change-password-button" @click="changePW">
+          비밀번호 변경
+        </button>
+
+        <!-- 버튼 그룹 -->
+        <div class="button-group">
+          <button class="cancel-button" @click="cancel">X 닫기</button>
+          <button class="update-button" @click="changeInfo">정보 수정</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -182,10 +193,8 @@ const deleteAccount = async () => {
 }
 
 .avatar img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #ffffff;
+  width: 120px;
+  height: 120px;
 }
 
 .delete-account-button {
@@ -244,10 +253,10 @@ input {
 }
 
 input#userId {
-  background-color: #f0f0f0; 
-  border: 1px solid #ddd; 
-  color: #888; 
-  cursor: not-allowed; 
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #888;
+  cursor: not-allowed;
 }
 
 /* 버튼 그룹 */
@@ -300,7 +309,7 @@ input#userId {
   border: 1px solid #555;
   border-radius: 6px;
   cursor: pointer;
-  width: 120px;
+  width: 140px;
   transition: background-color 0.3s ease;
 }
 
