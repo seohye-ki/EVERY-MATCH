@@ -115,7 +115,7 @@ const showResult = async () => {
           console.log(resultMessage.value);
           isResultVisible.value = true;
           isLoading.value = false;
-        }, 3000);
+        }, 1000);
       } else {
         await showAlert("오류발생", "다시 시도해주세요", "error");
         isLoading.value = false;
