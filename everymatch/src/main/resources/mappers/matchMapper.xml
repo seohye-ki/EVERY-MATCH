@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.everymatch.mvc.model.dao.MatchDao">
+ 	 	 	
+ 	<insert id="insertMatch" parameterType="Match">
+        INSERT INTO match_schedule (match_id, sport_name, date, time, home_team_id, away_team_id, location)
+        VALUES (#{matchId}, #{sportName}, #{date}, #{time}, #{homeTeamId}, #{awayTeamId}, #{location})
+    </insert>
+
+    <update id="updateMatch" parameterType="Match">
+        UPDATE match_schedule
+        SET sport_name = #{sportName},
+            date = #{date},
+            time = #{time},
+            home_team_id = #{homeTeamId},
+            away_team_id = #{awayTeamId},
+            location = #{location}
+        WHERE match_id = #{matchId}
+    </update>
+
+    <delete id="deleteMatch" parameterType="int">
+        DELETE FROM match_schedule
+        WHERE match_id = #{matchId}
+    </delete>
+ 	
+ 	<select id="getMatchesByTime" parameterType="String" resultType="Match">
+		SELECT *
+		FROM match_schedule
+		WHERE CONCAT(date, ' ', time) BETWEEN #{start} AND #{end}
+ 	</select>
+ 	
+ </mapper>
