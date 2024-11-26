@@ -44,7 +44,6 @@ onBeforeMount(async () => {
   } catch (error) {
     console.error("Error fetching events:", error);
   }
-  console.log(showTeams);
 });
 
 const useRout = useRouter();
@@ -75,7 +74,6 @@ const toggleTeamSelection = async (teamId) => {
 
 const storage = async () => {
   const Ids = favoriteTeams.value.map((team) => team.teamId);
-  console.log(Ids);
   try {
     const response = await api.put("/favorite", Ids);
     if (response.status === 200) {

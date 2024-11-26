@@ -89,7 +89,7 @@ const deleteAccount = async () => {
       await api.delete("/user");
       await showAlert("회원 탈퇴가 완료되었습니다.");
       sessionStorage.clear();
-      useRout.push("/login");
+      useRout.push("/");
     } catch (error) {
       console.error("Failed to delete user:", error);
       await showAlert("회원 탈퇴 중 문제가 발생했습니다.");

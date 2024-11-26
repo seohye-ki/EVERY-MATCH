@@ -82,7 +82,6 @@ const nextQuestion = (answer) => {
   answerMessage.value += `${questions.value[currentQuestionIndex.value]} ${
     optionsData.value[currentQuestionIndex.value][answer - 1]
   } `;
-  console.log(answerMessage.value);
 
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
@@ -112,7 +111,6 @@ const showResult = async () => {
             .replaceAll("! ", "!\n")
             .replaceAll(", ", ",\n")
             .split("\n");
-          console.log(resultMessage.value);
           isResultVisible.value = true;
           isLoading.value = false;
         }, 1000);

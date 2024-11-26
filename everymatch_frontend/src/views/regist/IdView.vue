@@ -30,7 +30,6 @@ const nextStep = async () => {
     const response = await api.post("user/check/id", formData);
 
     if (response.data) {
-      console.log("아이디 중복 아님", response.data);
       userStore.setId(id.value);
       router.push("/regist/pw");
     } else {

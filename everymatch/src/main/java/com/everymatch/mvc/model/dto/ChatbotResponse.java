@@ -1,6 +1,5 @@
 package com.everymatch.mvc.model.dto;
 
-import java.awt.Choice;
 import java.util.List;
 
 public class ChatbotResponse {

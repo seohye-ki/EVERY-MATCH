@@ -42,7 +42,6 @@ const rightPW = async () => {
 	    useRout.push('/main')
     }
   } catch (error) {
-    console.log(error.status)
 	oldPassword.value = ''
 	newPassword.value = ''
 	newPassword2.value = ''

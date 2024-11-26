@@ -40,7 +40,6 @@ const login = async () => {
 
     // 로그인 성공 처리
     if (response.status === 200) {
-      console.log("로그인 성공", response.data);
 
       // JWT 토큰 저장
       sessionStorage.setItem("Authorization", response.data["access-token"]);

@@ -43,7 +43,6 @@ const sendMessage = async () => {
       form.append("prompt", message.text);
       const response = await api.post("/chat/ask", form); // 가상의 API
       if (response.status === 200) {
-        console.log(response);
         const resMessage = {
           answer: true,
           sender: "파트너",
