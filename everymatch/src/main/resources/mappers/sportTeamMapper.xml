@@ -37,4 +37,10 @@
     	WHERE team_id = #{teamId};
 	</select>
 	
+	<select id="getSportTeamIdByTeamName" parameterType="String" resultType="int">
+		SELLECT team_id
+		FROM sport_team
+		WHERE team_name = #{teamName};
+	</select>
+	
 </mapper>

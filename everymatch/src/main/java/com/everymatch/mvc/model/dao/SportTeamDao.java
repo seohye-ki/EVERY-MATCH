@@ -23,5 +23,8 @@ public interface SportTeamDao {
 
 	//스포츠팀명 가져오기
 	public String getSportTeamNameByTeamId(int teamId);
+
+	//스포츠팀 아이디 가져오기
+	public int getSportTeamIdByTeamName(String teamName);
 	
 }
