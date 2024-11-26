@@ -21,11 +21,10 @@ api.interceptors.request.use(
 
 const useRout = useRouter();
 
-
-const userId = ref('');
-const nickname = ref('');
-const email = ref('');
-const img = ref('');
+const userId = ref("");
+const nickname = ref("");
+const email = ref("");
+const img = ref("");
 const favoriteTeams = ref([]);
 const isModalOpen = ref(false);
 const choose = ref(false);
@@ -45,7 +44,7 @@ onMounted(async () => {
       img.value = response.data.userImg;
       const favorite = await api.get("/favorite");
       favoriteTeams.value = favorite.data.favoriteTeams;
-      choose.value = true
+      choose.value = true;
     }
   } catch (error) {
     console.error("Failed to fetch user data:", error);
@@ -55,19 +54,17 @@ onMounted(async () => {
 // 정보 수정
 const changeInfo = async () => {
   try {
-
-    const form = new FormData()
-    form.append('nickname', nickname.value)
-    form.append('email', email.value)
-    form.append('userImg', img.value)
-    const response = await api.put('/user', form);
+    const form = new FormData();
+    form.append("nickname", nickname.value);
+    form.append("email", email.value);
+    form.append("userImg", img.value);
+    const response = await api.put("/user", form);
 
     if (response.status === 200) {
-	  sessionStorage.setItem("nickname", nickname.value);
-    sessionStorage.setItem("userImg", img.value);
-	  await showAlert('정보가 성공적으로 수정되었습니다.');
-      useRout.push('/main');
-
+      sessionStorage.setItem("nickname", nickname.value);
+      sessionStorage.setItem("userImg", img.value);
+      await showAlert("정보가 성공적으로 수정되었습니다.");
+      useRout.push("/main");
     }
   } catch (error) {
     console.error("Failed to update user data:", error);
@@ -91,7 +88,7 @@ const deleteAccount = async () => {
     try {
       await api.delete("/user");
       await showAlert("회원 탈퇴가 완료되었습니다.");
-      sessionStorage.clear
+      sessionStorage.clear();
       useRout.push("/login");
     } catch (error) {
       console.error("Failed to delete user:", error);
@@ -107,7 +104,7 @@ const selectTeamImage = (teamImg) => {
 
 const openModal = () => {
   if (favoriteTeams.value.length === 0) {
-    alert("좋아하는 팀이 없습니다!")
+    alert("좋아하는 팀이 없습니다!");
   } else {
     isModalOpen.value = true;
   }
@@ -116,71 +113,89 @@ const openModal = () => {
 const closeModal = () => {
   isModalOpen.value = false;
 };
-
 </script>
 <template>
-	<div class="mypage-container">
-	  <!-- 로고 -->
-	  <header class="header">
-		<img src="/src/assets/EVERYMATCH.png" alt="EVERYMATCH Logo" class="logo" />
-	  </header>
-  
-	  <!-- 마이페이지 컨텐츠 -->
-	  <div class="content">
-		<!-- 왼쪽 섹션 -->
-		<div class="left-section">
-      <div class="change-con">
-        <div class="avatar">
-        <img v-if="choose" :src="'/src/assets/imgs/' + img" onerror="this.onerror=null; this.src='/src/assets/icons/user.png';" 
-     alt="Image not found" />
+  <div class="mypage-container">
+    <!-- 로고 -->
+    <header class="header">
+      <img
+        src="/src/assets/EVERYMATCH.png"
+        alt="EVERYMATCH Logo"
+        class="logo"
+      />
+    </header>
+
+    <!-- 마이페이지 컨텐츠 -->
+    <div class="content">
+      <!-- 왼쪽 섹션 -->
+      <div class="left-section">
+        <div class="change-con">
+          <div class="avatar">
+            <img
+              v-if="choose"
+              :src="'/src/assets/imgs/' + img"
+              onerror="this.onerror=null; this.src='/src/assets/icons/user.png';"
+              alt="Image not found"
+            />
+          </div>
+          <button class="delete-account-button" @click="openModal">
+            팀 이미지 선택
+          </button>
         </div>
-        <button class="delete-account-button" @click="openModal">팀 이미지 선택</button>
+        <button class="delete-account-button" @click="deleteAccount">
+          회원탈퇴
+        </button>
       </div>
-		  <button class="delete-account-button" @click="deleteAccount">회원탈퇴</button>
-		</div>
-  
-		<!-- 오른쪽 섹션 -->
-		<div class="right-section">
-		  <h2 class="title">마이페이지</h2>
-  
-		  <!-- 사용자 정보 -->
-		  <div class="form-group">
-			<label for="userId">ID</label>
-			<input id="userId" type="text" :value="userId" readonly />
-		  </div>
-		  <div class="form-group">
-			<label for="nickname">Nickname</label>
-			<input id="nickname" :value="nickname" @input="(event) => (nickname = event.target.value)" type="text" />
-		  </div>
-		  <div class="form-group">
-			<label for="email">Email</label>
-			<input id="email" v-model="email" type="email" />
-		  </div>
-		  <button class="change-password-button" @click="changePW">
-			비밀번호 변경
-		  </button>  
-		  <!-- 버튼 그룹 -->
-		  <div class="button-group">
-			<button class="cancel-button" @click="cancel">X 닫기</button>
-			<button class="update-button" @click="changeInfo">정보 수정</button>
-		  </div>
-		</div>
-	  </div>
+
+      <!-- 오른쪽 섹션 -->
+      <div class="right-section">
+        <h2 class="title">마이페이지</h2>
+
+        <!-- 사용자 정보 -->
+        <div class="form-group">
+          <label for="userId">ID</label>
+          <input id="userId" type="text" :value="userId" readonly />
+        </div>
+        <div class="form-group">
+          <label for="nickname">Nickname</label>
+          <input
+            id="nickname"
+            :value="nickname"
+            @input="(event) => (nickname = event.target.value)"
+            type="text"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" v-model="email" type="email" />
+        </div>
+        <button class="change-password-button" @click="changePW">
+          비밀번호 변경
+        </button>
+        <!-- 버튼 그룹 -->
+        <div class="button-group">
+          <button class="cancel-button" @click="cancel">X 닫기</button>
+          <button class="update-button" @click="changeInfo">정보 수정</button>
+        </div>
+      </div>
+    </div>
     <div v-if="isModalOpen" class="modal-wrap">
       <div class="modal-container">
         <span class="close" @click="closeModal">&times;</span>
         <h3>팀 이미지를 선택하세요</h3>
         <div class="team-images">
           <div v-for="team in favoriteTeams" :key="team.id" class="team-image">
-            <img :src="'/src/assets/imgs/' + team.teamLogo"
-             alt="Team Image" @click="selectTeamImage(team.teamLogo)"
-             style="object-fit: contain; max-width: 80px; max-height: 80px;"
-             />
+            <img
+              :src="'/src/assets/imgs/' + team.teamLogo"
+              alt="Team Image"
+              @click="selectTeamImage(team.teamLogo)"
+              style="object-fit: contain; max-width: 80px; max-height: 80px"
+            />
           </div>
         </div>
       </div>
     </div>
-	</div>
+  </div>
 </template>
 
 <style scoped>
@@ -387,4 +402,3 @@ input#userId {
   gap: 20px;
 }
 </style>
-

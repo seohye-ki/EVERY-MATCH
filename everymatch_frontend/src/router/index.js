@@ -113,7 +113,12 @@ router.beforeEach((to, from, next) => {
   // 특정 페이지 제외 (예: '/public-page', '/login' 같은 페이지는 제외)
   const excludedRoutes = ["Login", "FindPw"];
   if (!token) {
-    if (excludedRoutes.includes(to.name) || to.name.startsWith("Regist")) {
+    if (to.name === "null" || typeof to.name == "undefined") {
+      next({ name: "Login" });
+    } else if (
+      excludedRoutes.includes(to.name) ||
+      to.name.startsWith("Regist")
+    ) {
       if (to.name === "Regist") {
         next({ name: "Regist_nick" });
       } else {

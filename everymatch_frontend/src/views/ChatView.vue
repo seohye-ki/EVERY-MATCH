@@ -47,7 +47,11 @@ const sendMessage = async () => {
         const resMessage = {
           answer: true,
           sender: "파트너",
-          text: response.data,
+          text: response.data
+            .replaceAll("*", "")
+            .replaceAll(". ", ".\n")
+            .replaceAll("! ", "!\n")
+            .replaceAll(", ", ",\n"),
           timestamp: new Date().getTime(),
         };
         messages.value.push(message); // 성공 시 메시지 추가
