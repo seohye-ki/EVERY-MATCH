@@ -1,6 +1,5 @@
-[구글독스]
-[피그마]
-[노션]
+<img width="1680" alt="EVERYMATCH" src="https://github.com/user-attachments/assets/44201988-96ee-4425-bca1-949d7644ae0e">
+<img width="1680" alt="Screenshot 2024-11-26 at 11 51 36 AM" src="https://github.com/user-attachments/assets/1749e5e5-b573-4c58-82b5-e25a04a64ef4">
 
 # EVERYMATCH 프로젝트 결과 보고서
 
@@ -9,6 +8,13 @@
 ## 프로젝트 팀 구성
 - **조장**: 이준환
 - **조원**: 김서현
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/ljh0401"><img src="https://github.com/user-attachments/assets/1356a98e-80b6-4780-bda5-777a7e4d9cc4" width="130px;" alt=""/><br /><sub><b>이준환</b></sub></a><br /><sub><b>조장(풀스택)</b><br>ERD</br>요구사항 정의서<br>UI 제작</br>Chat gpt API<br>FullCalendar</br></sub></td>          
+    <td align="center"><a href="https://github.com/seohye-ki"><img src="https://github.com/user-attachments/assets/00f751b1-36fe-4811-831f-dd2643a70652" width="106px;" alt=""/><br /><sub><b>김서현</b></sub></a><br /><sub><b>조원(풀스택)</b><br>와이어 프레임</br>로고 제작<br>UML 작성</br>JWT 토큰 인증<br>BCrypt 비밀번호 암호화</br></sub></td
+  </tr>
+</table><br/>
+
 
 ---
 
@@ -138,10 +144,10 @@ EVERYMATCH 프로젝트는 좋아하는 팀들의 경기 일정을 손쉽게 확
 
 ---
 
-##8. 후기
+## 8. 후기
 
 ### 이준환
-     -
+   - 재밌는 프로젝트
       
 ### 김서현
-     - 
+   - 즐거운 프로젝트
