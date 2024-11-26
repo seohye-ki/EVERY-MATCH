@@ -28,8 +28,7 @@ const email = ref('');
 const img = ref('');
 const favoriteTeams = ref([]);
 const isModalOpen = ref(false);
-
-
+const choose = ref(false);
 // 사용자 정보 불러오기
 onMounted(async () => {
   try {
@@ -46,6 +45,7 @@ onMounted(async () => {
       img.value = response.data.userImg;
       const favorite = await api.get("/favorite");
       favoriteTeams.value = favorite.data.favoriteTeams;
+      choose.value = true
     }
   } catch (error) {
     console.error("Failed to fetch user data:", error);
@@ -89,8 +89,9 @@ const cancel = () => {
 const deleteAccount = async () => {
   if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
     try {
-      await api.delete("/user/delete");
+      await api.delete("/user");
       await showAlert("회원 탈퇴가 완료되었습니다.");
+      sessionStorage.clear
       useRout.push("/login");
     } catch (error) {
       console.error("Failed to delete user:", error);
@@ -130,7 +131,8 @@ const closeModal = () => {
 		<div class="left-section">
       <div class="change-con">
         <div class="avatar">
-        <img :src="'/src/assets/imgs/' + img" alt="User Avatar" />
+        <img v-if="choose" :src="'/src/assets/imgs/' + img" onerror="this.onerror=null; this.src='/src/assets/icons/user.png';" 
+     alt="Image not found" />
         </div>
         <button class="delete-account-button" @click="openModal">팀 이미지 선택</button>
       </div>

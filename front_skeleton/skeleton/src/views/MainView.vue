@@ -139,6 +139,7 @@ const logout = () => {
 const goToChat = () => {
   useRou.push("/chat"); // 'chat' 경로로 이동
 };
+
 </script>
 
 <template>
@@ -152,7 +153,8 @@ const goToChat = () => {
       <!-- 왼쪽 사이드 메뉴 -->
       <div class="menu">
         <div class="avatar">
-          <img :src="'/src/assets/imgs/' + img" alt="userImg" />
+          <img :src="'/src/assets/imgs/' + img" onerror="this.onerror=null; this.src='/src/assets/icons/user.png';" 
+     alt="Image not found"/>
         </div>
         <div class="left-menu">
           <div class="menu-item">
