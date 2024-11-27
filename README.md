@@ -1,5 +1,4 @@
 <img width="1680" alt="EVERYMATCH" src="https://github.com/user-attachments/assets/44201988-96ee-4425-bca1-949d7644ae0e">
-<img width="1680" alt="Screenshot 2024-11-26 at 11 51 36 AM" src="https://github.com/user-attachments/assets/1749e5e5-b573-4c58-82b5-e25a04a64ef4">
 
 # EVERYMATCH 프로젝트 결과 보고서
 
@@ -149,7 +148,7 @@ EVERYMATCH 프로젝트는 좋아하는 팀들의 경기 일정을 손쉽게 확
    - 이번 프로젝트를 진행하며 이제는 기본 틀 없이 공식 레포 wiki를 참고하면서 스스로 만들어 나갈 수 있다는 자신감을 얻을 수 있었습니다.
       특히 chat gpt api를 활용할 때, api 활용 공식 문서를 통해 request와 response가 어떠한 정보가 필요하고, 제공되는지를 파악하여 이에 필요한 dto, service, controller를 만드는 과정은 재미있었습니다.
      
-     또한 지금까지 SSAFY 과정을 통해 배워왔던 Spring, Vue를 직접 활용해보면서 많은 부분에서 성장을 이룰 수 있었고, 이제는 구현을 넘어 최적화에 대한 고민이 필요함을 느꼈습니다.
+     또한 배우고 활용을 적게 해 본 Spring, Vue를 직접 활용해보면서 많은 부분에서 성장을 이룰 수 있었고, 이제는 구현을 넘어 최적화에 대한 고민이 필요함을 느꼈습니다.
      특히 Vue 프레임워크를 통해 플랫폼을 만들며, 구현을 하는 것은 큰 문제가 없으나 반복되는 코드를 재활용하지 않는 등 유지보수적 측면에서 부족한 점이 많았습니다.
      다음 프로젝트를 진행할 때에는 지금보다 좀 더 보기 편하고, 유지보수가 용이한 프로젝트를 완성하도록 노력하겠습니다.
      
