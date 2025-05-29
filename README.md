@@ -1,7 +1,7 @@
 <img width="1680" alt="EVERYMATCH" src="https://github.com/user-attachments/assets/44201988-96ee-4425-bca1-949d7644ae0e">
 
-# EVERYMATCH 프로젝트 결과 보고서
-
+# 🏟️ 프로스포츠 경기 일정 종합 캘린더 EVERYMATCH
+![everymatch_main](https://github.com/user-attachments/assets/e086b4a8-51ae-4778-8516-36d51d0342b6)
 ---
 
 ## 프로젝트 팀 구성
@@ -21,9 +21,10 @@
 3. 데이터베이스 테이블 구조 (ERD)  
 4. 클래스 다이어그램  
 5. 사용된 라이브러리 및 프레임워크  
-6. 프레임워크 선택 이유  
+6. 프레임워크 선택 이유 
 7. 결론 및 기대효과
-8. 후기
+8. 주요기능
+9. 후기
 
 ---
 
@@ -142,7 +143,41 @@ EVERYMATCH 프로젝트는 좋아하는 팀들의 경기 일정을 손쉽게 확
 
 ---
 
-## 8. 후기
+## 8. 주요기능
+### 👤 회원관련
+> 회원가입
+
+![resister](https://github.com/user-attachments/assets/c3a7679f-bad3-40c8-b0fb-f21ffb754576)
+
+> 마이페이지
+
+![Screen_Recording_2024-11-26_at_5](https://github.com/user-attachments/assets/7459d171-b572-438d-8b77-d78c8ea6aa7b)
+
+### 📅 경기일정 캘린더
+> 관심팀으로 설정한 팀의 모든 경기를 확인할 수 있고, 해당날짜에 경기수가 많아질수록 붉게 표시됩니다. 오늘 날짜는 노란색으로 표시됩니다.
+
+![calendar](https://github.com/user-attachments/assets/7735f94a-1b42-4566-8b74-c833e53f7318)
+
+
+### 👍 관심팀 설정
+> 야구, 축구, 농구, 배구 등 여러 스포츠의 팀을 관심팀으로 설정할 수 있습니다.
+
+![SSAFY-FINAL-PJT](https://github.com/user-attachments/assets/f4fa2a96-60bf-4058-a8c0-d57f72208213)
+![SSAFY-FINAL-PJT (1)](https://github.com/user-attachments/assets/0e0600d3-2b29-4518-a3c6-da331cf1db27)
+
+
+### 🤖 AI관련
+> AI팀추천 : 간단한 몇가지 질문으로 나와 잘 맞는 팀을 찾을 수 있습니다.
+
+![ai_team](https://github.com/user-attachments/assets/5507cf73-27cd-43d5-9032-ab54d3bd840f)
+
+> AI챗봇 : 스포츠나 경기와 관련된 궁금한 점은 모두 물어보세요
+
+![Screen_Recording_2024-11-26_at_11 27 04 AM_(1)](https://github.com/user-attachments/assets/4fb12627-d267-4586-bdce-d38120ad911f)
+
+---
+
+## 9. 후기
 
 ### 이준환
    - 일주일이라는 짧은 시간동안, 원하는 기능들을 넣기 위해 정말 많은 고민을 했다. 고민을 한 만큼 많은 시도를 했었고, 이를 통해 많은 것들을 배울 수 있었다. 하지만 고민하고, 시도를 한 부분 모두를 기록하지 않아 현재의 내가 당시 했던 고민의 흔적만을 탐색할 수 있다는 것은 아쉽게 다가왔다. 이번 프로젝트는 단기로 진행하여 그나마 기억이 생생하지만, 장기적인 프로젝트를 진행할 경우에는 더더욱 기록을 중요시 할 것이다.
